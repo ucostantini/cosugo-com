@@ -17,6 +17,8 @@
 				"build": {
 					"builder": "@angular/build:application",
 					"options": {
+            "baseHref": "/cosugo-com/",
+            "outputPath": "dist/cosugo-com",
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/govuk-frontend/dist/govuk"
@@ -96,7 +98,10 @@
 							"src/styles.scss"
 						]
 					}
-				}
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
+        }
 			}
 		}
 	}
