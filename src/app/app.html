@@ -1,0 +1,47 @@
+<div class="govuk-service-navigation"
+     data-module="govuk-service-navigation">
+  <div class="govuk-width-container">
+    <div class="govuk-service-navigation__container">
+            <span class="govuk-service-navigation__service-name">
+        <a class="govuk-service-navigation__link" href="#">
+          Tools
+        </a>
+      </span>
+      <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+        <button aria-controls="navigation" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
+                hidden type="button">
+          Menu
+        </button>
+        <ul class="govuk-service-navigation__list" id="navigation">
+          <li class="govuk-service-navigation__item" routerLinkActive="govuk-service-navigation__item--active">
+            <a class="govuk-service-navigation__link" routerLink="/nutrition">
+              Nutrition facts comparison tool
+            </a>
+          </li>
+          <li class="govuk-service-navigation__item" routerLinkActive="govuk-service-navigation__item--active">
+            <a class="govuk-service-navigation__link" routerLink="/about">
+              About
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="govuk-width-container govuk-phase-banner">
+  <p class="govuk-phase-banner__content">
+    <strong class="govuk-tag govuk-phase-banner__content__tag">
+      Alpha
+    </strong>
+    <span class="govuk-phase-banner__text">
+      This is a new service. New tools will be added in the future. Help me improve it and <a class="govuk-link"
+                                                                                              href="https://github.com/ucostantini/cosugo-com/issues/new">submit a Github issue</a>.
+    </span>
+  </p>
+</div>
+
+<div class="govuk-width-container">
+  <main class="govuk-main-wrapper" id="main-content" role="main">
+    <router-outlet/>
+  </main>
+</div>
