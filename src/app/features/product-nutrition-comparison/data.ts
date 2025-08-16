@@ -1,12 +1,13 @@
 export type Product = {
   name: string;
   price: number;
+  weight: number;
   servingSize: number;
   calories: number;
   proteins: number;
 };
 
-export type ProductNutritionFactsComparison = {
+export type NormalizedProduct = {
   name: string;
   caloriesPer100g: string;
   proteinsPer100g: string;

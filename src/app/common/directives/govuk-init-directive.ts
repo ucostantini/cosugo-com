@@ -14,7 +14,6 @@ import {
   Tabs
 } from 'govuk-frontend';
 
-// A map of the data-module name to the component constructor
 const componentMap: { [key: string]: any } = {
   'govuk-accordion': Accordion,
   'govuk-button': Button,

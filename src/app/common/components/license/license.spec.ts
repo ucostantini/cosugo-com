@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductTracker } from './product-tracker';
+import { License } from './license';
 
-describe('ProductTracker', () => {
-  let component: ProductTracker;
-  let fixture: ComponentFixture<ProductTracker>;
+describe('License', () => {
+  let component: License;
+  let fixture: ComponentFixture<License>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductTracker]
+      imports: [License]
     })
-      .compileComponents();
+    .compileComponents();
 
-    fixture = TestBed.createComponent(ProductTracker);
+    fixture = TestBed.createComponent(License);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,57 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Product nutrition facts comparison tool</h1>
+
+    <p class="govuk-body">Compare the calories and proteins of your products by normalising their unit measure and
+      price</p>
+
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+      <app-product-form (submitEvent)="onProductAdd($event)"></app-product-form>
+      </div>
+      <div class="govuk-grid-column-two-thirds">
+        <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--m">Products comparison</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Name</th>
+            <th class="govuk-table__header" scope="col">Calories per 100g</th>
+            <th class="govuk-table__header" scope="col">Proteins (g) per 100g</th>
+            <th class="govuk-table__header" scope="col">Calories per £</th>
+            <th class="govuk-table__header" scope="col">Proteins (g) per £</th>
+            <th class="govuk-table__header" scope="col"></th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            @for (product of products; track $index) {
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                  {{ product.name }}
+                </td>
+                <td class="govuk-table__cell">
+                  {{ product.caloriesPer100g }}
+                </td>
+                <td class="govuk-table__cell">
+                  {{ product.proteinsPer100g }}
+                </td>
+                <td class="govuk-table__cell">
+                  {{ product.caloriesPerCurrency }}
+                </td>
+                <td class="govuk-table__cell">
+                  {{ product.proteinsPerCurrency }}
+                </td>
+                <td class="govuk-table__cell">
+                  <button (click)="onDeleteProduct($index)" class="govuk-button govuk-button--warning" style="margin-bottom: 0;" data-module="govuk-button">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

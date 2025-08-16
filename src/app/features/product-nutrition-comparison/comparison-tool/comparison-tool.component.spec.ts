@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductNutritionComparison } from './product-nutrition-comparison';
+import { ComparisonTool } from './comparison-tool.component';
 
 describe('ProductNutritionComparison', () => {
-  let component: ProductNutritionComparison;
-  let fixture: ComponentFixture<ProductNutritionComparison>;
+  let component: ComparisonTool;
+  let fixture: ComponentFixture<ComparisonTool>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductNutritionComparison]
+      imports: [ComparisonTool]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(ProductNutritionComparison);
+    fixture = TestBed.createComponent(ComparisonTool);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
