@@ -2,11 +2,14 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl">Product nutrition facts comparison tool</h1>
 
-    <p class="govuk-body">Compare the calories and proteins of your products by normalising their unit measure and
+    <p class="govuk-body-lead">Compare the calories and proteins of your products by normalising their unit of measure and
       price</p>
 
     <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
 
+    <div class="govuk-inset-text">
+      Units of measurement do not matter for calculation. £ and grams are only used for display purposes.
+    </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-third">
       <app-product-form (submitEvent)="onProductAdd($event)"></app-product-form>

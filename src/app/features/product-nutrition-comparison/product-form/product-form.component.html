@@ -12,55 +12,80 @@
       <input autocomplete="name" class="govuk-input govuk-input--width-10 govuk-input--extra-letter-spacing" formControlName="name" id="name"
              name="name" required spellcheck="false" type="text">
     </div>
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" [ngClass]="{ 'govuk-form-group--error': priceInvalid() }">
       <label class="govuk-label" for="price">
         Price
       </label>
+      @if (priceInvalid()) {
+        <p id="price-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Enter a whole number
+        </p>
+      }
       <div class="govuk-input__wrapper">
         <div aria-hidden="true" class="govuk-input__prefix">£</div>
         <input aria-describedby="price-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="price" id="price"
                inputmode="numeric" name="price" required spellcheck="false" step="1"
-               type="number">
+               type="number" pattern="[0-9]*" [ngClass]="{ 'govuk-input--error': priceInvalid() }">
       </div>
     </div>
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" [ngClass]="{ 'govuk-form-group--error': weightInvalid() }">
       <label class="govuk-label" for="weight">
         Weight
       </label>
+      @if (weightInvalid()) {
+        <p id="weight-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Enter a whole number
+        </p>
+      }
       <div class="govuk-input__wrapper">
         <input aria-describedby="weight" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="weight"
                id="weight" inputmode="numeric" name="weight" required spellcheck="false"
-               step="1" type="number">
+               step="1" type="number" pattern="[0-9]*" [ngClass]="{ 'govuk-input--error': weightInvalid() }">
         <div aria-hidden="true" class="govuk-input__suffix">g</div>
       </div>
     </div>
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" [ngClass]="{ 'govuk-form-group--error': servingSizeInvalid() }">
       <label class="govuk-label" for="serving-size">
         Serving size
       </label>
+      @if (servingSizeInvalid()) {
+        <p id="serving-size-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Enter a whole number
+        </p>
+      }
       <div class="govuk-input__wrapper">
         <input aria-describedby="serving-size" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="servingSize"
                id="serving-size" inputmode="numeric" name="servingSize" required spellcheck="false"
-               step="1" type="number">
+               step="1" type="number" pattern="[0-9]*" [ngClass]="{ 'govuk-input--error': servingSizeInvalid() }">
         <div aria-hidden="true" class="govuk-input__suffix">g</div>
       </div>
     </div>
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" [ngClass]="{ 'govuk-form-group--error': caloriesInvalid() }">
       <label class="govuk-label" for="amount-calories">
         Calories per serving
       </label>
+      @if (caloriesInvalid()) {
+        <p id="calories-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Enter a whole number
+        </p>
+      }
       <input aria-describedby="amount-calories" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="calories"
              id="amount-calories" inputmode="numeric" name="amountCalories" required spellcheck="false"
-             step="1" type="number">
+             step="1" type="number" pattern="[0-9]*" [ngClass]="{ 'govuk-input--error': caloriesInvalid() }">
     </div>
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" [ngClass]="{ 'govuk-form-group--error': proteinsInvalid() }">
       <label class="govuk-label" for="amount-proteins">
         Proteins per serving
       </label>
+      @if (proteinsInvalid()) {
+        <p id="proteins-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> Enter a whole number
+        </p>
+      }
       <div class="govuk-input__wrapper">
         <input aria-describedby="amount-calories" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="proteins"
                id="amount-calories" inputmode="numeric" name="amountCalories" required spellcheck="false"
-               step="1" type="number">
+               step="1" type="number" pattern="[0-9]*" [ngClass]="{ 'govuk-input--error': proteinsInvalid() }">
         <div aria-hidden="true" class="govuk-input__suffix">g</div>
       </div>
     </div>
