@@ -1,0 +1,13 @@
+<div class="govuk-input__wrapper" style="display: inline-flex; align-items: center;">
+  <!-- <button type="button" class="govuk-button govuk-button--secondary" >-</button>
+   <input class="govuk-input govuk-input--width-2" id="coefficiente-{{$$index}}" type="number" min="1" max="10" value="1" #coeffInput>
+   <button type="button" class="govuk-button govuk-button--secondary govuk-input__suffix" >+</button>
+ </div>-->
+
+  <div class="govuk-button-group ">
+    <button style="border: 2px solid #0b0c0c" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" type="button" (click)="decrement()">-</button>
+    <input class="govuk-input govuk-input--width-2" type="number" min="1" max="10" value="{{this.value}}">
+    <button style="border: 2px solid #0b0c0c" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" type="button" (click)="increment()">+</button>
+  </div>
+
+</div>

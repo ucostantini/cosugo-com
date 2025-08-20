@@ -1,0 +1,60 @@
+
+<div class="govuk-checkboxes" data-module="govuk-checkboxes">
+  <table class="govuk-table" [formGroup]="this.form!">
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header" i18n>Indicatori</th>
+      <th scope="col" class="govuk-table__header" i18n>Coefficiente</th>
+      <th scope="col" class="govuk-table__header" i18n>Il tuo valore preferito</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body" formArrayName="indicatori">
+      @for (indicatore of indicatori; track $index) {
+
+        <tr class="govuk-table__row" [formGroupName]="$index">
+          <td class="govuk-table__cell">
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="indicatore-{{$index}}" type="checkbox" formControlName="isSelected">
+              <label class="govuk-label govuk-checkboxes__label" for="indicatore-{{$index}}">
+                {{indicatore.name}}
+              </label>
+            </div>
+          </td>
+          <td class="govuk-table__cell">
+            <app-counter id="coeff-pref-{{$index}}" formControlName="coeff"></app-counter>
+          </td>
+          <td class="govuk-table__cell">
+            <div class="govuk-hint">
+              {{indicatore.unit}}
+            </div>
+            <app-govuk-slider id="indicatore-pref-{{$index}}" [min]=indicatore.min [max]=indicatore.max formControlName="valore"></app-govuk-slider>
+          </td>
+
+          <!--
+                          <td class="govuk-table__cell">
+              <div class="govuk-form-group">
+                  <input class="govuk-input govuk-input--width-4"
+                         id="indicatore-pref-{{$$index}}"
+                         name="indicatore-pref-{{$$index}}"
+                         type="number"
+                         min="0" max="100" value="50"
+                         aria-describedby="indicatore-pref-{{$$index}}-hint">
+                  <div id="indicatore-pref-{{$$index}}-hint" class="govuk-hint govuk-!-margin-top-1">
+                      0 to 100
+                  </div>
+              </div>
+          </td>
+          -->
+
+
+        </tr>
+      }
+
+    </tbody>
+  </table>
+
+</div>
+
+
+
+

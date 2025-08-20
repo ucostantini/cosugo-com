@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="it-IT" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="5164203118303819278" datatype="html">
+        <source> Qualità della vita 2024 </source>
+      </trans-unit>
+      <trans-unit id="1123892181162108666" datatype="html">
+        <source> Categorie </source>
+      </trans-unit>
+      <trans-unit id="163763686213179521" datatype="html">
+        <source>Il tuo valore preferito</source>
+      </trans-unit>
+      <trans-unit id="1964415867593133407" datatype="html">
+        <source> La classifica personale </source>
+      </trans-unit>
+      <trans-unit id="8602562394663455805" datatype="html">
+        <source> Essempi </source>
+      </trans-unit>
+      <trans-unit id="5489423521949637100" datatype="html">
+        <source> Chi siamo </source>
+      </trans-unit>
+      <trans-unit id="6168758786232295409" datatype="html">
+        <source>Indicatori</source>
+      </trans-unit>
+      <trans-unit id="7537188775662795573" datatype="html">
+        <source>Coefficiente</source>
+      </trans-unit>
+      <trans-unit id="7858200068829148581" datatype="html">
+        <source> Attenzione </source>
+      </trans-unit>
+      <trans-unit id="416974373366610921" datatype="html">
+        <source> Questo nuovo website è in fase di realizzazione – il tuo <x id="START_LINK" ctype="x-a" equiv-text="&lt;a class=&quot;govuk-link&quot; href=&quot;#&quot;&gt;"/>feedback<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ci aiuterà a migliorarlo. </source>
+      </trans-unit>
+      <trans-unit id="4568025969880696244" datatype="html">
+        <source>Categorie</source>
+      </trans-unit>
+      <trans-unit id="8725983391439097249" datatype="html">
+        <source>La classifica dei territori più vivibili</source>
+      </trans-unit>
+      <trans-unit id="2684988075878474387" datatype="html">
+        <source> Classifica </source>
+      </trans-unit>
+      <trans-unit id="3195656736563539030" datatype="html">
+        <source>A seguire, per ciascuna categoria, è possibile “esplodere” i piazzamenti conseguiti nei diversi categorie che la compongono (15 parametri per categoria nel 2024) .</source>
+      </trans-unit>
+      <trans-unit id="3968843962396379848" datatype="html">
+        <source>Qual è la tua classifica ideale della Qualità della vita? Rispondi ad alcune domande e scopri le dieci province più adatte in base alle tue priorità</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

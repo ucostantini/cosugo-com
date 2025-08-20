@@ -1,0 +1,6 @@
+<div class="govuk-slider-container">
+  <input class="govuk-slider"
+         type="range" min="{{min}}" max="{{max}}" step="{{(max - min) / (100 - 1)}}" value="{{this.value}}"
+          (change)="onUpdate($event)" oninput="this.nextElementSibling.textContent = Number(this.value).toFixed(2)">
+  <output class="govuk-slider__value">{{this.value}}</output>
+</div>

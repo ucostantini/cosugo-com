@@ -1,0 +1,105 @@
+/*
+ * GOV.UK Frontend-style Range Slider
+ *
+ * This is a custom component as the GOV.UK Design System does not
+ * include a range slider. It is styled to be consistent with
+ * GOV.UK Frontend components.
+ *
+ * This component should be used inside a .govuk-form-group.
+ */
+
+.govuk-slider-container {
+  display: flex;
+  align-items: center;
+  /* Match height of other form controls */
+  min-height: 40px;
+}
+
+.govuk-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  flex-grow: 1;
+  height: 4px;
+  background: #b1b4b6; /* govuk-colour("light-grey") */
+  border-radius: 2px;
+  outline: none;
+  margin: 0;
+}
+
+/*
+ * Slider Thumb - Webkit
+ */
+.govuk-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -12px; /* Vertically centre */
+  background: #1d70b8; /* govuk-colour("blue") */
+  border-radius: 50%;
+  border: 2px solid #1d70b8;
+  cursor: pointer;
+}
+
+/*
+ * Slider Thumb - Firefox
+ */
+.govuk-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #1d70b8; /* govuk-colour("blue") */
+  border-radius: 50%;
+  border: 2px solid #1d70b8;
+  cursor: pointer;
+}
+
+/*
+ * Focus State - GDS Standard
+ */
+.govuk-slider:focus {
+  outline: 3px solid #fd0; /* govuk-colour("yellow") */
+  outline-offset: 2px;
+}
+
+.govuk-slider:focus::-webkit-slider-thumb {
+  background: #0b0c0c; /* govuk-colour("black") */
+  border-color: #fd0; /* govuk-colour("yellow") */
+}
+
+.govuk-slider:focus::-moz-range-thumb {
+  background: #0b0c0c; /* govuk-colour("black") */
+  border-color: #fd0; /* govuk-colour("yellow") */
+}
+
+/*
+ * Disabled State
+ */
+.govuk-slider:disabled {
+  opacity: .5;
+}
+
+.govuk-slider:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.govuk-slider:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+/*
+ * Value Output
+ */
+.govuk-slider__value {
+  font-family: GDS Transport, arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 1.1875rem;
+  line-height: 1.3157894737;
+  color: #0b0c0c;
+  margin-left: 20px;
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
