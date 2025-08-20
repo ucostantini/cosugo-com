@@ -1,0 +1,98 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Unit converter tool</h1>
+
+    <p class="govuk-body-lead">Convert</p>
+
+    <div class="govuk-inset-text">
+
+      You MUST follow the pattern
+    </div>
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        US legal units are used (fl oz = 30mL | tsp = 5mL | tbsp = 1mL)
+      </strong>
+    </div>
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      Available units
+    </span>
+      </summary>
+      <div class="govuk-details__text">
+        <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--m">Available units</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Input</th>
+            <th scope="col" class="govuk-table__header">Unit</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">First 6 weeks</th>
+            <td class="govuk-table__cell">£109.80 per week</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">Next 33 weeks</th>
+            <td class="govuk-table__cell">£109.80 per week</td>
+          </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">Total estimated pay</th>
+            <td class="govuk-table__cell">£4,282.20</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      Available currencies
+    </span>
+      </summary>
+      <div class="govuk-details__text">
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Denomination</th>
+            <th class="govuk-table__header" scope="col">Code</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+          @for (currency of Object.entries(this.currencyService.getAvailableCurrencies()); track $index) {
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell">
+                {{currency[1]}}
+              </td>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">
+                  {{currency[0]}}
+                </strong>
+              </td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <div class="govuk-grid-row">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="converter">
+          Input your request here
+        </label>
+        <div id="converter-hint" class="govuk-hint">
+          [Number] [Unit] to [Unit]
+        </div>
+        <input autocomplete="converter" class="govuk-input govuk-input--width-20 govuk-input--extra-letter-spacing" id="converter"
+               name="converter" required spellcheck="false" type="text" aria-describedby="converter-hint">
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      {{}}
+    </div>
+  </div>
+</div>
