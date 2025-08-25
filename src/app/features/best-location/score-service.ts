@@ -1,15 +1,14 @@
 import { inject, Injectable } from '@angular/core';
-import { DataService } from './data-service';
 import {
   Categoria,
   CategoriaScore,
   DbScore, GlobalEntry, Indicatore,
-  IndicatoreScore, PerCategoryEntry, PerIndicatorEntry,
+  IndicatoreScore, IndicatorValues, PerCategoryEntry, PerIndicatorEntry,
   Provincia,
   ProvinciaValore,
   Ranking, Score,
   Valori
-} from '../core/data';
+} from './data';
 
 @Injectable({
   providedIn: 'root'
@@ -17,23 +16,20 @@ import {
 export class ScoreService {
   private readonly keyOf = (category: string, indicator: string) => `${category}::${indicator}`;
 
-  private provinciaValori: DbScore;
+  private provinciaValori: IndicatorValues;
 
   constructor() {
-    this.provinciaValori = {
-      indicatorValues: new Map(),
-      locations: new Set()
-    };
+    this.provinciaValori = new Map();
   }
 
-  setProvinciaValori(provinciaValori: DbScore) {
+  setProvinciaValori(provinciaValori: IndicatorValues) {
     this.provinciaValori = provinciaValori;
   }
 
 
   // incremental accumulators:
   // globalAcc: location -> { sumWeightedDistance, sumCoefficients }
-  private readonly globalAcc = new Map<Provincia, { sumWeightedDistance: number; sumCoefficients: number }>();
+  private readonly globalAcc = new Map<Provincia, { locationCode: string; sumWeightedDistance: number; sumCoefficients: number }>();
 
   // perCategoryAcc: category -> (location -> { sumWeightedDistance, sumCoefficients })
   private readonly perCategoryAcc = new Map<Categoria, Map<Provincia, { sumWeightedDistance: number; sumCoefficients: number }>>();
@@ -48,6 +44,7 @@ export class ScoreService {
   private applyWeightedContribution(
     category: Categoria,
     location: Provincia,
+    locationCode: string,
     weightedDistanceDelta: number, // positive to add, negative to remove
     coeffDelta: number // positive to add, negative to remove
   ) {
@@ -61,7 +58,7 @@ export class ScoreService {
         this.globalAcc.delete(location);
       }
     } else if (coeffDelta > 0) {
-      this.globalAcc.set(location, {sumWeightedDistance: weightedDistanceDelta, sumCoefficients: coeffDelta});
+      this.globalAcc.set(location, {locationCode, sumWeightedDistance: weightedDistanceDelta, sumCoefficients: coeffDelta});
     }
 
     // Per-category accumulator
@@ -94,23 +91,23 @@ export class ScoreService {
   /** Internal: add contributions of aScore (used by select and update). */
   private addPreferenceContributions(pref: Indicatore) {
     const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.indicatorValues.get(k) ?? [];
-    for (const { location, avgValue } of arr) {
+    const arr = this.provinciaValori.get(k) ?? [];
+    for (const { location, locationCode, avgValue } of arr) {
       const distance = Math.abs(avgValue - pref.valore);
       const weighted = pref.coefficiente * distance;
-      this.applyWeightedContribution(pref.categoria, location, weighted, pref.coefficiente);
+      this.applyWeightedContribution(pref.categoria, location, locationCode, weighted, pref.coefficiente);
     }
   }
 
   /** Internal: remove contributions of aScore (used by deselect and update). */
   private removePreferenceContributions(pref: Indicatore) {
     const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.indicatorValues.get(k) ?? [];
-    for (const { location, avgValue } of arr) {
+    const arr = this.provinciaValori.get(k) ?? [];
+    for (const { location, locationCode, avgValue } of arr) {
       const distance = Math.abs(avgValue - pref.valore);
       const weighted = pref.coefficiente * distance;
       // Subtract contributions
-      this.applyWeightedContribution(pref.categoria, location, -weighted, -pref.coefficiente);
+      this.applyWeightedContribution(pref.categoria, location, locationCode, -weighted, -pref.coefficiente);
     }
   }
 
@@ -177,7 +174,7 @@ export class ScoreService {
   /** Compute per-indicator ranking on demand (simple method). */
   getPerIndicatorRanking(pref:Indicatore): PerIndicatorEntry[] {
     const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.indicatorValues.get(k) ?? [];
+    const arr = this.provinciaValori.get(k) ?? [];
     // compute scores then sort
     const scored = arr.map(({ location, avgValue }) => {
       const distance = Math.abs(avgValue - pref.valore);
@@ -187,54 +184,6 @@ export class ScoreService {
     scored.sort((a, b) => a.score - b.score || a.location.localeCompare(b.location));
     for (let i = 0; i < scored.length; i++) scored[i].rank = i + 1;
     return scored;
-  }
-
-  /**
-   * Optional: faster per-indicator ranking without sorting by score:
-   * Using the fact that indicatorValues[k] is sorted by avgValue, we can binary-search for the insertion index
-   * of valore and then expand outwards getting the nearest-by-distance order in O(L) time (no sort).
-   */
-  getPerIndicatorRankingByBinarySearch(pref:Indicatore): PerIndicatorEntry[] {
-    const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.indicatorValues.get(k) ?? [];
-    if (arr.length === 0) return [];
-
-    // find insertion index (first item with avgValue >= valore)
-    let lo = 0, hi = arr.length;
-    while (lo < hi) {
-      const mid = (lo + hi) >> 1;
-      if (arr[mid].avgValue < pref.valore) lo = mid + 1;
-      else hi = mid;
-    }
-
-    // expand from lo-1 (left) and lo (right)
-    let left = lo - 1, right = lo;
-    const result: PerIndicatorEntry[] = [];
-    while (left >= 0 || right < arr.length) {
-      if (left < 0) {
-        const it = arr[right++];
-        const sc = pref.coefficiente * Math.abs(it.avgValue - pref.valore);
-        result.push({ category: pref.categoria, indicator: pref.name, location: it.location, avgValue: it.avgValue, score: sc } as PerIndicatorEntry);
-      } else if (right >= arr.length) {
-        const it = arr[left--];
-        const sc = pref.coefficiente * Math.abs(it.avgValue - pref.valore);
-        result.push({ category: pref.categoria, indicator: pref.name, location: it.location, avgValue: it.avgValue, score: sc } as PerIndicatorEntry);
-      } else {
-        const leftDist = Math.abs(arr[left].avgValue - pref.valore);
-        const rightDist = Math.abs(arr[right].avgValue - pref.valore);
-        if (leftDist <= rightDist) {
-          const it = arr[left--];
-          result.push({ category: pref.categoria, indicator: pref.name, location: it.location, avgValue: it.avgValue, score: pref.coefficiente * leftDist } as PerIndicatorEntry);
-        } else {
-          const it = arr[right++];
-          result.push({ category: pref.categoria, indicator: pref.name, location: it.location, avgValue: it.avgValue, score: pref.coefficiente * rightDist } as PerIndicatorEntry);
-        }
-      }
-    }
-
-    // assign ranks
-    for (let i = 0; i < result.length; i++) result[i].rank = i + 1;
-    return result;
   }
 
   /** Return per-category ranking for the given category (derived from accumulators). */
@@ -253,13 +202,13 @@ export class ScoreService {
 
   /** Return global ranking across all selected indicators. */
   getGlobalRanking(): GlobalEntry[] {
-    const arr: GlobalEntry[] = [];
-    for (const [location, { sumWeightedDistance, sumCoefficients }] of this.globalAcc.entries()) {
-      arr.push({ location, compositeScore: Number((sumWeightedDistance / sumCoefficients).toFixed(2)) });
+    const arr: any = [];
+    for (const [location, { locationCode, sumWeightedDistance, sumCoefficients }] of this.globalAcc.entries()) {
+      arr.push({ location: location, locationCode: locationCode, compositeScore: Number((sumWeightedDistance / sumCoefficients).toFixed(2)) });
     }
-    arr.sort((a, b) => a.compositeScore - b.compositeScore || a.location.localeCompare(b.location));
+    arr.sort((a: any, b: any) => a.compositeScore - b.compositeScore || a.location.localeCompare(b.location));
     for (let i = 0; i < arr.length; i++) arr[i].rank = i + 1;
-    return arr;
+    return arr as GlobalEntry[];
   }
 
   /** List currently active keys (category::indicator). */

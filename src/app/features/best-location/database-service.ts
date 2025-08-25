@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import initSqlJs, { type Database, type QueryExecResult } from 'sql.js';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
+import { FeatureCollection } from 'geojson';
+import { MapFeature, FeatureProperties } from './data';
 
 @Injectable({
   providedIn: 'root'
@@ -52,4 +54,7 @@ export class DatabaseService {
     return this.db.exec(query);
   }
 
+  getGeoJsonData(): Observable<FeatureCollection<MapFeature, FeatureProperties>> {
+    return this.http.get<FeatureCollection<MapFeature, FeatureProperties>>('assets/IT_provinces.geojson');
+  }
 }

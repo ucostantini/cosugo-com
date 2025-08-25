@@ -6,6 +6,7 @@ import {
 import { Home } from './common/components/home/home';
 import { NotFound } from './common/components/not-found/not-found';
 import { License } from './common/components/license/license';
+import { BestLocation } from './features/best-location/best-location/best-location.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,10 @@ export const routes: Routes = [
   {
     path: 'nutrition',
     component: ComparisonTool
+  },
+  {
+    path: 'best-location',
+    component: BestLocation
   },
   {
     path: '**',

@@ -1,4 +1,5 @@
 import { FormControl } from '@angular/forms';
+import { MultiPolygon, Polygon } from 'geojson';
 
 export type QDV = Map<Categoria, Indicatore[]>;
 
@@ -73,7 +74,7 @@ export type ScoreForm = {
   score: Score;
 };
 
-export type IndicatorValues = Map<string, { location: Provincia; avgValue: number }[]>;
+export type IndicatorValues = Map<string, { location: Provincia; locationCode: string; avgValue: number }[]>;
 
 // set of known locations (useful to enumerate all locations)
 export type Locations = Set<Provincia>;
@@ -101,8 +102,21 @@ export type PerCategoryEntry = {
 
 export type GlobalEntry = {
   location: Provincia;
+  locationCode: string;
   compositeScore: number;
-  rank?: number;
+  rank: number;
 };
+
+
+export type MapFeature = Polygon | MultiPolygon;
+export type FeatureProperties = {
+  "prov_name": string,
+  "prov_istat_code_num": number,
+  "prov_acr": string,
+  "reg_name": string,
+  "reg_istat_code": string,
+  "reg_istat_code_num": number,
+  "prov_istat_code": string
+}
 
 

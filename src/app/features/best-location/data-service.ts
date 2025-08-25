@@ -1,6 +1,6 @@
 import { inject, Injectable, LOCALE_ID } from '@angular/core';
 import {
-  DbScore,
+  DbScore, MapFeature, FeatureProperties,
   Indicatore,
   IndicatoreKey,
   IndicatorValues,
@@ -9,11 +9,13 @@ import {
   ProvinciaValore,
   QDV,
   Valori
-} from '../core/data';
+} from './data';
 import { DatabaseService } from './database-service';
 import { type SqlValue } from 'sql.js';
-import { Loc, translationMap } from '../core/translation';
-import { LocalStorageService } from './local-storage-service';
+import { Loc, translationMap } from './translation';
+import { LocalStorageService } from '../../common/services/local-storage-service';
+import { Observable } from 'rxjs';
+import { FeatureCollection } from 'geojson';
 
 @Injectable({
   providedIn: 'root'
@@ -60,66 +62,52 @@ export class DataService {
     return categorie;
   }
 
-  getProvinciaValori(): DbScore {
-    const currentDbScore = this.localStorageService.getItem<DbScore>("dbScore");
+  getProvinciaValori(): IndicatorValues {
+    const currentDbScore = this.localStorageService.getItem<IndicatorValues>("indicatorValues");
     if (currentDbScore) return currentDbScore;
 
-    const val = this.db.executeQuery('SELECT QDV2024."DENOMINAZIONE CORRENTE", QDV2024.CATEGORIA, QDV2024.INDICATORE, QDV2024.VALORE FROM QDV2024');
+    const val = this.db.executeQuery('SELECT QDV2024."DENOMINAZIONE CORRENTE", QDV2024."CODICE PROVINCIA ISTAT (STORICO)", QDV2024.CATEGORIA, QDV2024.INDICATORE, QDV2024.VALORE FROM QDV2024');
 
     // precomputed averages per (category::indicator) => array of { location, avgValue }
-    const indicatorValues: IndicatorValues = new Map<string, Array<{ location: Provincia; avgValue: number }>>();
+    const indicatorValues: IndicatorValues = new Map<string, Array<{ location: Provincia; locationCode: string; avgValue: number }>>();
 
-    // set of known locations (useful to enumerate all locations)
-    const provinces: Locations = new Set<Provincia>();
-
-
-    const tmp = new Map<string, Map<Provincia, { sum: number; count: number }>>();
+    const tmp = new Map<string, Map<Provincia, { locationCode: string; sum: number; count: number }>>();
 
     const keyOf = (category: string, indicator: string) => `${category}::${indicator}`;
 
 
     val[0].values.forEach((row: SqlValue[]) => {
-      const p: ProvinciaValore = {
-        provincia: row[0] as string,
-        categoria: translationMap[(row[1] as string)][this.locale as Loc],
-        indicatore: translationMap[(row[2] as string)][this.locale as Loc],
-        valore: Number((row[3] as number).toFixed(2))
-      };
+      const value: number = Number((row[4] as number).toFixed(2));
 
-
-      provinces.add(p.provincia);
-      const k = keyOf(p.categoria, p.indicatore);
+      const k = keyOf(translationMap[(row[2] as string)][this.locale as Loc], translationMap[(row[3] as string)][this.locale as Loc]);
       let map = tmp.get(k);
       if (!map) {
         map = new Map();
         tmp.set(k, map);
       }
-      const acc = map.get(p.provincia);
+      const acc = map.get(row[0] as string);
       if (acc) {
-        acc.sum += p.valore;
+        acc.sum += value;
         acc.count += 1;
       } else {
-        map.set(p.provincia, {sum: p.valore, count: 1});
+        map.set(row[0] as string, {locationCode: row[1] as string, sum: value, count: 1});
       }
     });
 
 
     for (const [k, locMap] of tmp.entries()) {
-      const arr: Array<{ location: Provincia; avgValue: number }> = [];
-      for (const [loc, {sum, count}] of locMap.entries()) {
-        arr.push({location: loc, avgValue: sum / count});
+      const arr: Array<{ location: Provincia; locationCode: string; avgValue: number }> = [];
+      for (const [loc, {locationCode, sum, count}] of locMap.entries()) {
+        arr.push({location: loc, locationCode: locationCode, avgValue: sum / count});
       }
-      // keep arr sorted by avgValue for optional binary-search ranking
-      arr.sort((a, b) => a.avgValue - b.avgValue || a.location.localeCompare(b.location));
       indicatorValues.set(k, arr);
     }
 
-    const dbScore: DbScore = {
-      indicatorValues: indicatorValues,
-      locations: provinces
-    };
+    this.localStorageService.setItem<IndicatorValues>("indicatorValues", indicatorValues);
+    return indicatorValues;
+  }
 
-    this.localStorageService.setItem<DbScore>("dbScore", dbScore);
-    return dbScore;
+  getGeoJsonData(): Observable<FeatureCollection<MapFeature, FeatureProperties>> {
+    return this.db.getGeoJsonData();
   }
 }

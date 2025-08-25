@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnDestroy, OnInit, output, Output } from '@angular/core';
-import { Indicatore, IndicatoreForm, IndicatoreKey, IndicatoreScore, Score, ScoreForm } from '../core/data';
+import { Indicatore, IndicatoreForm, IndicatoreKey, IndicatoreScore, Score, ScoreForm } from '../data';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GovukSlider } from '../govuk-slider/govuk-slider';
 import { Counter } from '../counter/counter';

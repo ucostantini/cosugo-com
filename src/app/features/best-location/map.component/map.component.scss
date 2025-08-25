@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 600px;
+  position: relative;
+}
+
+/* the map container: single-color base */
+.map-host {
+  width: 100%;
+  height: 100%;
+  background: #e6e6e6; /* light grey base — change to your preferred grey */
+  /* optionally ensure no OSM tiles are visible if leftover */
+  background-size: cover;
+  background-position: center;
+}

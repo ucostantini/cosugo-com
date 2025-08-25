@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GlobalEntry } from '../core/data';
+import { GlobalEntry } from '../data';
 
 @Component({
   selector: 'app-ranking',

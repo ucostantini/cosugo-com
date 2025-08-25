@@ -1,0 +1,81 @@
+
+<h1 class="govuk-heading-xl" i18n>La ranking dei territori più vivibili</h1>
+
+<p class="govuk-body" i18n>Qual è la tua ranking ideale della Qualità della vita? Rispondi ad alcune domande e scopri le dieci province più adatte in base alle tue priorità</p>
+
+@if (isDbLoaded) {
+
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-tabs" data-module="govuk-tabs">
+        <ul class="govuk-tabs__list">
+          <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="/best-location/#categories" i18n>
+              Categories
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="/best-location/#ranking" i18n>
+              Ranking
+            </a>
+          </li>
+        </ul>
+        <div class="govuk-tabs__panel" id="categories">
+          <h2 class="govuk-heading-l" i18n>Categories</h2>
+          <p class="govuk-body" i18n>Select your preferences</p>
+
+
+
+          <div class="govuk-accordion" data-module="govuk-accordion" appGovukAccordion>
+
+            <fieldset class="govuk-fieldset">
+
+              @for (iterator of data.entries(); track $index) {
+                <div class="govuk-accordion__section">
+                  <div class="govuk-accordion__section-header">
+                    <h2 class="govuk-accordion__section-heading">
+                      <button class="govuk-accordion__section-button" id="category-heading-{{$index}}">
+                        {{ iterator[0] }}
+                      </button>
+                    </h2>
+                  </div>
+                  <div id="category-content-{{$index}}" class="govuk-accordion__section-content">
+                    <!--<p class="govuk-body">This is {{categorie}}.</p>-->
+
+
+                    <app-indicatore-valore [indicatori]="iterator[1]" (scoreChangeEvent)="onIndicatorChange($event)"></app-indicatore-valore>
+
+                  </div>
+                </div>
+
+              }
+            </fieldset>
+
+          </div>
+
+
+        </div>
+        <div class="govuk-tabs__panel--hidden" id="ranking">
+          <h2 class="govuk-heading-l" i18n>Ranking</h2>
+          <p class="govuk-body" i18n>Ranking</p>
+
+
+          <app-ranking [globalRanking]="this.score"></app-ranking>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <app-map [geojson]="this.geojsonData" [rankingOrder]="this.score" [persistenceKey]="'mapData'"></app-map>
+    </div>
+
+  </div>
+
+
+} @else {
+  <app-govuk-loading-spinner></app-govuk-loading-spinner>
+}
+
+<button style="position: fixed; bottom: 20px; right: 30px; z-index: 99;" class="govuk-button--secondary" (click)="scrollToTop()">^</button>

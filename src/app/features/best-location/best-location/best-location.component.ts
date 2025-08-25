@@ -1,28 +1,31 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DataService } from './services/data-service';
+import { DataService } from '../data-service';
 import {
   Categoria,
-  CategoriaScore, GlobalEntry,
+  CategoriaScore, MapFeature, FeatureProperties, GlobalEntry,
   Indicatore,
   IndicatoreKey,
   IndicatoreScore,
   QDV,
   Score,
   ScoreForm
-} from './core/data';
-import { DatabaseService } from './services/database-service';
-import { GovukAccordionDirective } from './govuk-accordion-directive';
-import { GovukSlider } from './govuk-slider/govuk-slider';
-import { GovukLoadingSpinner } from './govuk-loading-spinner/govuk-loading-spinner';
-import { IndicatoreValore } from './indicatore-valore/indicatore-valore';
-import { ScoreService } from './services/score-service';
-import { Ranking } from './ranking/ranking';
-import { LocalStorageService } from './services/local-storage-service';
+} from '../data';
+import { GovukAccordionDirective } from '../govuk-accordion-directive';
+import { GovukSlider } from '../govuk-slider/govuk-slider';
+import { GovukLoadingSpinner } from '../govuk-loading-spinner/govuk-loading-spinner';
+import { IndicatoreValore } from '../indicatore-valore/indicatore-valore';
+import { ScoreService } from '../score-service';
+import { Ranking } from '../ranking/ranking';
+import { LocalStorageService } from '../../../common/services/local-storage-service';
+import { DatabaseService } from '../database-service';
+import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
+import { LocationsMap } from '../map.component/map.component';
+import { FeatureCollection } from 'geojson';
 
 @Component({
   selector: 'app-best-location',
-  imports: [RouterOutlet, GovukAccordionDirective, GovukLoadingSpinner, IndicatoreValore, Ranking],
+  imports: [RouterOutlet, GovukAccordionDirective, GovukLoadingSpinner, IndicatoreValore, Ranking, LocationsMap],
   templateUrl: './best-location.component.html',
   standalone: true,
   styleUrl: './best-location.component.scss'
@@ -35,12 +38,17 @@ export class BestLocation implements OnInit {
   protected data: QDV = new Map<Categoria, Indicatore[]>();
   protected score: GlobalEntry[] = [];
   private readonly scores: QDV = new Map<Categoria, Indicatore[]>();
+  protected geojsonData: FeatureCollection<MapFeature, FeatureProperties> | null = null;
 
   ngOnInit(): void {
     this.dataService.initDb().then(r => {
-      this.data = this.localStorage.getItem<QDV>('score') ?? this.dataService.getQdv();
+      this.data = /*this.localStorage.getItem<QDV>('score') ??*/ this.dataService.getQdv();
       this.scoreService.setProvinciaValori(this.dataService.getProvinciaValori());
       this.isDbLoaded = true;
+    });
+
+    this.dataService.getGeoJsonData().subscribe(r => {
+      this.geojsonData = r;
     });
 
   }
@@ -66,5 +74,10 @@ export class BestLocation implements OnInit {
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(_: any) {
     this.localStorage.setItem<QDV>('score', this.scores);
+  }
+
+  scrollToTop() {
+    document.body.scrollTop = 300; // For Safari
+    document.documentElement.scrollTop = 300; // For Chrome, Firefox, IE and Opera
   }
 }
