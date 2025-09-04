@@ -1,3 +1,15 @@
-<div class="map-host" #mapHost></div>
-
-
+@if (geojson) {
+  <svg [attr.width]="width" [attr.height]="height" [attr.viewBox]="'0 0 ' + width + ' ' + height" style="width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet">
+    <g class="provinces">
+      @for (feature of geojson.features; track feature.properties.prov_istat_code_num) {
+        <path
+          [attr.d]="getFeaturePath(feature)"
+          [attr.fill]="getFillColor(feature)"
+          stroke="#FFFFFF"
+          stroke-width="0.5">
+          <title>{{ feature.properties?.prov_name }}</title>
+        </path>
+      }
+    </g>
+  </svg>
+}

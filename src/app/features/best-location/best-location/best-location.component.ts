@@ -77,7 +77,14 @@ export class BestLocation implements OnInit {
   }
 
   scrollToTop() {
-    document.body.scrollTop = 300; // For Safari
-    document.documentElement.scrollTop = 300; // For Chrome, Firefox, IE and Opera
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   }
+
+  selectedTab: 'categories' | 'ranking' = 'categories';
+
+  selectTab(tab: 'categories' | 'ranking'): void {
+    this.selectedTab = tab;
+  }
+
 }

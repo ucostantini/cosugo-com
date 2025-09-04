@@ -1,224 +1,196 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   Categoria,
-  CategoriaScore,
-  DbScore, GlobalEntry, Indicatore,
-  IndicatoreScore, IndicatorValues, PerCategoryEntry, PerIndicatorEntry,
+  GlobalEntry,
+  Indicatore,
+  IndicatorValues,
+  PerCategoryEntry,
+  PerIndicatorEntry,
   Provincia,
-  ProvinciaValore,
-  Ranking, Score,
-  Valori
 } from './data';
+
+// A reusable type for our accumulator entries
+type Accumulator = { sumWeightedDistance: number; sumCoefficients: number };
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScoreService {
+  private provinciaValori: IndicatorValues = new Map();
+  private readonly globalAcc = new Map<Provincia, Accumulator & { locationCode: string }>();
+  private readonly perCategoryAcc = new Map<Categoria, Map<Provincia, Accumulator>>();
+  private readonly activePrefs = new Map<string, Indicatore>();
+
   private readonly keyOf = (category: string, indicator: string) => `${category}::${indicator}`;
-
-  private provinciaValori: IndicatorValues;
-
-  constructor() {
-    this.provinciaValori = new Map();
-  }
 
   setProvinciaValori(provinciaValori: IndicatorValues) {
     this.provinciaValori = provinciaValori;
   }
 
+  // --- PUBLIC API ---
 
-  // incremental accumulators:
-  // globalAcc: location -> { sumWeightedDistance, sumCoefficients }
-  private readonly globalAcc = new Map<Provincia, { locationCode: string; sumWeightedDistance: number; sumCoefficients: number }>();
-
-  // perCategoryAcc: category -> (location -> { sumWeightedDistance, sumCoefficients })
-  private readonly perCategoryAcc = new Map<Categoria, Map<Provincia, { sumWeightedDistance: number; sumCoefficients: number }>>();
-
-  // which indicators are currently active, and theScore used
-  // key = this.keyOf(category, indicator) ->Score
-  private readonly activePrefs = new Map<string, Indicatore>();
-
-
-
-  /** Helper: apply a weighted contribution to accumulators (positive or negative). */
-  private applyWeightedContribution(
-    category: Categoria,
-    location: Provincia,
-    locationCode: string,
-    weightedDistanceDelta: number, // positive to add, negative to remove
-    coeffDelta: number // positive to add, negative to remove
-  ) {
-    // Global accumulator
-    const g = this.globalAcc.get(location);
-    if (g) {
-      g.sumWeightedDistance += weightedDistanceDelta;
-      g.sumCoefficients += coeffDelta;
-      if (g.sumCoefficients <= 0) {
-        // remove to keep maps small and avoid division by zero
-        this.globalAcc.delete(location);
-      }
-    } else if (coeffDelta > 0) {
-      this.globalAcc.set(location, {locationCode, sumWeightedDistance: weightedDistanceDelta, sumCoefficients: coeffDelta});
+  selectIndicator(pref: Indicatore): void {
+    const key = this.keyOf(pref.categoria, pref.name);
+    if (this.activePrefs.has(key)) {
+      return;
     }
-
-    // Per-category accumulator
-    let catMap = this.perCategoryAcc.get(category);
-    if (!catMap) {
-      if (coeffDelta > 0) {
-        catMap = new Map();
-        this.perCategoryAcc.set(category, catMap);
-      } else {
-        // trying to remove from a non-existing cat map — nothing to do
-        return;
-      }
-    }
-
-    const c = catMap.get(location);
-    if (c) {
-      c.sumWeightedDistance += weightedDistanceDelta;
-      c.sumCoefficients += coeffDelta;
-      if (c.sumCoefficients <= 0) {
-        catMap.delete(location);
-      }
-    } else if (coeffDelta > 0) {
-      catMap.set(location, {sumWeightedDistance: weightedDistanceDelta, sumCoefficients: coeffDelta});
-    }
-
-    // If category map became empty, remove it entirely
-    if (catMap.size === 0) this.perCategoryAcc.delete(category);
+    this.modifyPreferenceContributions(pref, 'add');
+    this.activePrefs.set(key, { ...pref });
   }
 
-  /** Internal: add contributions of aScore (used by select and update). */
-  private addPreferenceContributions(pref: Indicatore) {
-    const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.get(k) ?? [];
-    for (const { location, locationCode, avgValue } of arr) {
-      const distance = Math.abs(avgValue - pref.valore);
-      const weighted = pref.coefficiente * distance;
-      this.applyWeightedContribution(pref.categoria, location, locationCode, weighted, pref.coefficiente);
+  deselectIndicator(pref: Indicatore): void {
+    const key = this.keyOf(pref.categoria, pref.name);
+    const storedPref = this.activePrefs.get(key);
+    if (!storedPref) {
+      return;
     }
+    this.modifyPreferenceContributions(storedPref, 'remove');
+    this.activePrefs.delete(key);
   }
 
-  /** Internal: remove contributions of aScore (used by deselect and update). */
-  private removePreferenceContributions(pref: Indicatore) {
-    const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.get(k) ?? [];
-    for (const { location, locationCode, avgValue } of arr) {
-      const distance = Math.abs(avgValue - pref.valore);
-      const weighted = pref.coefficiente * distance;
-      // Subtract contributions
-      this.applyWeightedContribution(pref.categoria, location, locationCode, -weighted, -pref.coefficiente);
+  updateIndicator(pref: Indicatore): void {
+    const key = this.keyOf(pref.categoria, pref.name);
+    const storedPref = this.activePrefs.get(key);
+
+    if (storedPref) {
+      this.modifyPreferenceContributions(storedPref, 'remove');
     }
+    this.modifyPreferenceContributions(pref, 'add');
+    this.activePrefs.set(key, { ...pref });
   }
 
-  /**
-   * Select an indicator (apply itsScore). This updates per-category and global accumulators.
-   * If already selected, it's a no-op.
-   */
-  selectIndicator(pref:Indicatore) {
-    const k = this.keyOf(pref.categoria, pref.name);
-    if (this.activePrefs.has(k)) return; // already selected
-    // add contributions
-    this.addPreferenceContributions(pref);
-    // store the active pref so we can update or remove later
-    this.activePrefs.set(k, { ...pref });
-  }
-
-  /**
-   * Deselect an indicator (remove itsScore contributions).
-   * If not selected, no-op.
-   */
-  deselectIndicator(pref:Indicatore) {
-    const k = this.keyOf(pref.categoria, pref.name);
-    const stored = this.activePrefs.get(k);
-    if (!stored) return; // not active
-    // Remove contributions of the stored preference (not the passed one — stored is canonical)
-    this.removePreferenceContributions(stored);
-    this.activePrefs.delete(k);
-  }
-
-  /**
-   * Update an indicator'sScore in-place.
-   * If the indicator is active, we remove old contributions (from stored activePref) and apply the new one.
-   * If the indicator is not active, we simply select it (add new pref).
-   */
-  updateIndicator(pref:Indicatore) {
-    const k = this.keyOf(pref.categoria, pref.name);
-    const stored = this.activePrefs.get(k);
-    if (stored) {
-      // Remove old contributions (based on stored pref)
-      this.removePreferenceContributions(stored);
-      // Add new contributions (based on incoming pref)
-      this.addPreferenceContributions(pref);
-      // Replace stored pref with the new one
-      this.activePrefs.set(k, { ...pref });
-    } else {
-      // Not active — just select it
-      this.selectIndicator(pref);
-    }
-  }
-
-  /** Set the entire active selection at once (clear previous and select provided prefs). */
-  setSelection(preferences:Indicatore[]) {
-    // clear internals
+  setSelection(preferences: Indicatore[]): void {
     this.globalAcc.clear();
     this.perCategoryAcc.clear();
     this.activePrefs.clear();
 
-    for (const p of preferences) {
-      this.addPreferenceContributions(p);
-      this.activePrefs.set(this.keyOf(p.categoria, p.name), { ...p });
+    for (const pref of preferences) {
+      this.modifyPreferenceContributions(pref, 'add');
+      this.activePrefs.set(this.keyOf(pref.categoria, pref.name), { ...pref });
     }
   }
 
-  /** Compute per-indicator ranking on demand (simple method). */
-  getPerIndicatorRanking(pref:Indicatore): PerIndicatorEntry[] {
-    const k = this.keyOf(pref.categoria, pref.name);
-    const arr = this.provinciaValori.get(k) ?? [];
-    // compute scores then sort
-    const scored = arr.map(({ location, avgValue }) => {
-      const distance = Math.abs(avgValue - pref.valore);
-      return { category: pref.categoria, indicator: pref.name, location, avgValue, score: pref.coefficiente * distance } as PerIndicatorEntry;
-    });
+  getPerIndicatorRanking(pref: Indicatore): PerIndicatorEntry[] {
+    const key = this.keyOf(pref.categoria, pref.name);
+    const values = this.provinciaValori.get(key) ?? [];
 
-    scored.sort((a, b) => a.score - b.score || a.location.localeCompare(b.location));
-    for (let i = 0; i < scored.length; i++) scored[i].rank = i + 1;
-    return scored;
+    const scored = values.map(({ location, avgValue }) => ({
+      category: pref.categoria,
+      indicator: pref.name,
+      location,
+      avgValue,
+      score: pref.coefficiente * Math.abs(avgValue - pref.valore),
+    }));
+
+    return this.rank(scored, item => item.score);
   }
 
-  /** Return per-category ranking for the given category (derived from accumulators). */
   getPerCategoryRanking(category: Categoria): PerCategoryEntry[] {
     const catMap = this.perCategoryAcc.get(category);
-    if (!catMap) return [];
-
-    const arr: PerCategoryEntry[] = [];
-    for (const [location, { sumWeightedDistance, sumCoefficients }] of catMap.entries()) {
-      arr.push({ category, location, compositeScore: Number((sumWeightedDistance / sumCoefficients).toFixed(2)) });
+    if (!catMap) {
+      return [];
     }
-    arr.sort((a, b) => a.compositeScore - b.compositeScore || a.location.localeCompare(b.location));
-    for (let i = 0; i < arr.length; i++) arr[i].rank = i + 1;
-    return arr;
+    const scored = Array.from(catMap.entries()).map(([location, acc]) => ({
+      category,
+      location,
+      compositeScore: this.calculateScore(acc),
+    }));
+
+    return this.rank(scored, item => item.compositeScore);
   }
 
-  /** Return global ranking across all selected indicators. */
   getGlobalRanking(): GlobalEntry[] {
-    const arr: any = [];
-    for (const [location, { locationCode, sumWeightedDistance, sumCoefficients }] of this.globalAcc.entries()) {
-      arr.push({ location: location, locationCode: locationCode, compositeScore: Number((sumWeightedDistance / sumCoefficients).toFixed(2)) });
-    }
-    arr.sort((a: any, b: any) => a.compositeScore - b.compositeScore || a.location.localeCompare(b.location));
-    for (let i = 0; i < arr.length; i++) arr[i].rank = i + 1;
-    return arr as GlobalEntry[];
+    const scored = Array.from(this.globalAcc.entries()).map(([location, acc]) => ({
+      location,
+      locationCode: acc.locationCode,
+      compositeScore: this.calculateScore(acc),
+    }));
+
+    return this.rank(scored, item => item.compositeScore);
   }
 
-  /** List currently active keys (category::indicator). */
-  activeIndicators() {
+  activeIndicators(): string[] {
     return Array.from(this.activePrefs.keys());
   }
 
-  /** Is a given pref active? */
-  isActive(pref:Indicatore) {
+  isActive(pref: Indicatore): boolean {
     return this.activePrefs.has(this.keyOf(pref.categoria, pref.name));
   }
 
+  // --- PRIVATE HELPERS ---
+
+  private calculateScore(acc: Accumulator): number {
+    if (acc.sumCoefficients === 0) {
+      return 0;
+    }
+    return Number((acc.sumWeightedDistance / acc.sumCoefficients).toFixed(2));
+  }
+
+  private rank<T extends { location: string }>(items: T[], scoreAccessor: (item: T) => number): (T & { rank: number })[] {
+    items.sort((a, b) => scoreAccessor(a) - scoreAccessor(b) || a.location.localeCompare(b.location));
+    return items.map((item, index) => ({ ...item, rank: index + 1 }));
+  }
+
+  private modifyPreferenceContributions(pref: Indicatore, operation: 'add' | 'remove'): void {
+    const key = this.keyOf(pref.categoria, pref.name);
+    const values = this.provinciaValori.get(key) ?? [];
+    const sign = operation === 'add' ? 1 : -1;
+
+    for (const { location, locationCode, avgValue } of values) {
+      const distance = Math.abs(avgValue - pref.valore);
+      const weightedDistanceDelta = sign * pref.coefficiente * distance;
+      const coeffDelta = sign * pref.coefficiente;
+      this.applyWeightedContribution(pref.categoria, location, locationCode, weightedDistanceDelta, coeffDelta);
+    }
+  }
+
+  private applyWeightedContribution(
+    category: Categoria,
+    location: Provincia,
+    locationCode: string,
+    weightedDistanceDelta: number,
+    coeffDelta: number
+  ): void {
+    this.updateAccumulator(this.globalAcc, location, weightedDistanceDelta, coeffDelta, () => ({
+      locationCode,
+      sumWeightedDistance: weightedDistanceDelta,
+      sumCoefficients: coeffDelta,
+    }));
+
+    let catMap = this.perCategoryAcc.get(category);
+    if (!catMap && coeffDelta > 0) {
+      catMap = new Map();
+      this.perCategoryAcc.set(category, catMap);
+    }
+
+    if (catMap) {
+      this.updateAccumulator(catMap, location, weightedDistanceDelta, coeffDelta, () => ({
+        sumWeightedDistance: weightedDistanceDelta,
+        sumCoefficients: coeffDelta,
+      }));
+      if (catMap.size === 0) {
+        this.perCategoryAcc.delete(category);
+      }
+    }
+  }
+
+  private updateAccumulator<T extends Accumulator>(
+    map: Map<Provincia, T>,
+    location: Provincia,
+    weightedDistanceDelta: number,
+    coeffDelta: number,
+    create: () => T
+  ): void {
+    const acc = map.get(location);
+    if (acc) {
+      acc.sumWeightedDistance += weightedDistanceDelta;
+      acc.sumCoefficients += coeffDelta;
+      // Use a small epsilon for float comparison to avoid precision issues
+      if (acc.sumCoefficients < 1e-6) {
+        map.delete(location);
+      }
+    } else if (coeffDelta > 0) {
+      map.set(location, create());
+    }
+  }
 }

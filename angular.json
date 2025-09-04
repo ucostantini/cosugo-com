@@ -1,18 +1,18 @@
 {
-	"$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-	"version": 1,
-	"newProjectRoot": "projects",
-	"projects": {
-		"cosugo-com": {
-			"projectType": "application",
-			"schematics": {
-				"@schematics/angular:component": {
-					"style": "scss"
-				}
-			},
-			"root": "",
-			"sourceRoot": "src",
-			"prefix": "app",
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "cosugo-com": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
       "i18n": {
         "sourceLocale": "it-IT",
         "locales": {
@@ -24,10 +24,10 @@
           }
         }
       },
-			"architect": {
-				"build": {
-					"builder": "@angular/build:application",
-					"options": {
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
             "baseHref": "/cosugo-com/",
             "outputPath": "dist/cosugo-com",
             "allowedCommonJsDependencies": [
@@ -38,73 +38,81 @@
                 "node_modules/govuk-frontend/dist/govuk"
               ]
             },
-						"browser": "src/main.ts",
-						"polyfills": [
-							"zone.js",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js",
               "@angular/localize/init"
-						],
-						"tsConfig": "tsconfig.app.json",
-						"assets": [
-							{
-								"glob": "**/*",
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
                 "input": "assets",
                 "output": "assets"
-							},
+              },
               {
                 "glob": "sql-wasm.wasm",
                 "input": "node_modules/sql.js/dist",
                 "output": "assets/sql.js/"
               }
-						],
-						"styles": [
-							"src/styles.scss"
-						]
-					},
-					"configurations": {
-						"production": {
-							"budgets": [
-								{
-									"type": "initial",
-									"maximumWarning": "500kB",
-									"maximumError": "1MB"
-								},
-								{
-									"type": "anyComponentStyle",
-									"maximumWarning": "4kB",
-									"maximumError": "8kB"
-								}
-							],
-							"outputHashing": "all"
-						},
-						"development": {
-							"optimization": false,
-							"extractLicenses": false,
-							"sourceMap": true
-						},
-            "fr": {              "localize": ["fr"]            },
-            "en": {              "localize": ["en"]            }
-					},
-					"defaultConfiguration": "production"
-				},
-				"serve": {
-					"builder": "@angular/build:dev-server",
-					"configurations": {
-						"production": {
-							"buildTarget": "cosugo-com:build:production"
-						},
-						"development": {
-							"buildTarget": "cosugo-com:build:development"
-						},
+            ],
+            "styles": [
+              "src/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            },
+            "fr": {
+              "localize": [
+                "fr"
+              ]
+            },
+            "en": {
+              "localize": [
+                "en"
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "cosugo-com:build:production"
+            },
+            "development": {
+              "buildTarget": "cosugo-com:build:development"
+            },
             "en": {
               "buildTarget": "cosugo-com:build:development,en"
             }
-					},
-					"defaultConfiguration": "development"
-				},
-				"extract-i18n": {
-					"builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
           "options": {
-            "buildTarget": "QDV2024:build",
+            "buildTarget": "cosugo-com:build",
             "format": "xlf",
             "outputPath": "src/locale",
             "targetFiles": [
@@ -112,32 +120,33 @@
               "messages.en.xlf"
             ]
           }
-				},
-				"test": {
-					"builder": "@angular/build:karma",
-					"options": {
-						"polyfills": [
-							"zone.js",
-							"zone.js/testing"
-						],
-						"tsConfig": "tsconfig.spec.json",
-						"assets": [
-							{
-								"glob": "**/*",
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing",
+              "@angular/localize/init"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
                 "input": "assets",
                 "output": "assets"
-							}
-						],
-						"styles": [
-							"src/styles.scss"
-						]
-					}
+              }
+            ],
+            "styles": [
+              "src/styles.scss"
+            ]
+          }
         },
         "deploy": {
           "builder": "angular-cli-ghpages:deploy"
         }
-			}
-		}
+      }
+    }
   },
   "cli": {
     "analytics": false

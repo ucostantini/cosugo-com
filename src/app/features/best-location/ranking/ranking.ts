@@ -9,5 +9,4 @@ import { GlobalEntry } from '../data';
 })
 export class Ranking {
   @Input() globalRanking: GlobalEntry[] = [];
-
 }
