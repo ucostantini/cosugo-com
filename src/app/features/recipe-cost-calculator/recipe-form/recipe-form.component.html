@@ -1,0 +1,92 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="this.form">
+  <fieldset class="govuk-fieldset">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+      <h1 class="govuk-fieldset__heading">
+        Ingredients
+      </h1>
+    </legend>
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="recipeName">
+        Name of the recipe
+      </label>
+      <input autocomplete="recipeName" class="govuk-input govuk-input--width-10 govuk-input--extra-letter-spacing" formControlName="name" id="recipeName"
+             name="recipeName" required spellcheck="false" type="text">
+    </div>
+
+    <div formArrayName="ingredients">
+    @for (ingredient of ingredients.controls; track $index) {
+
+      <div [formGroup]="getIngredientFormGroup($index)">
+        <h2>Ingredient #{{$index}}</h2>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="name">
+            Name
+          </label>
+          <input autocomplete="name" class="govuk-input govuk-input--width-10 govuk-input--extra-letter-spacing" formControlName="name" id="name"
+                 name="name" required spellcheck="false" type="text">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="price">
+            Price
+          </label>
+          <div class="govuk-input__wrapper">
+            <div aria-hidden="true" class="govuk-input__prefix">£</div>
+            <input aria-describedby="price-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="price" id="price"
+                   inputmode="numeric" name="price" spellcheck="false"
+                   type="number">
+          </div>
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="quantity">
+            Quantity
+          </label>
+          <div id="quantity-hint" class="govuk-hint">
+            The unit does not matter. You can input the number of items (e.g. 1 can of diced tomatoes)
+          </div>
+          <input aria-describedby="quantity-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="quantity" id="quantity"
+                 inputmode="numeric" name="quantity" required spellcheck="false"
+                 type="number">
+        </div>
+
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="quantity-used">
+            Quantity used
+          </label>
+          <div id="quantity-used-hint" class="govuk-hint">
+            Use the same unit you used before.
+          </div>
+          <input aria-describedby="quantity-used-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="quantityUsed" id="quantity-used"
+                 inputmode="numeric" name="quantity-used" required spellcheck="false"
+                 type="number">
+        </div>
+      </div>
+    }
+
+    </div>
+
+    <button class="govuk-button" data-module="govuk-button" (click)="addIngredient()">
+      Add ingredient
+    </button>
+
+
+
+    <div class="govuk-form-group">
+      <label class="govuk-label" for="serving-size">
+        Serving size
+      </label>
+      <div id="serving-size-hint" class="govuk-hint">
+        Optional. Must be a fraction of the recipe, i.e. < 1 (e.g. 0.2)
+      </div>
+      <input aria-describedby="quantity-used-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="servingSize" id="serving-size"
+             inputmode="numeric" name="serving-size" spellcheck="false"
+             type="number">
+    </div>
+
+  </fieldset>
+  <button [disabled]="!form.valid" class="govuk-button" data-module="govuk-button" type="submit">
+    Calculate the cost
+  </button>
+</form>
