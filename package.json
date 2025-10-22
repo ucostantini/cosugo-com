@@ -30,6 +30,7 @@
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
     "govuk-frontend": "^5.11.1",
+    "pdf-parse": "^2.4.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -40,6 +41,7 @@
     "@angular/compiler-cli": "^20.1.0",
     "@types/govuk-frontend": "^5.9.0",
     "@types/jasmine": "~5.1.0",
+    "@types/pdf-parse": "^1.1.5",
     "angular-cli-ghpages": "^2.0.3",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
