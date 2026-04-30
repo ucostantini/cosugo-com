@@ -1,1 +1,69 @@
-<p>test.component works!</p>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">USA Civics Test</h1>
+
+    @if (civicsTest) {
+      <p class="govuk-heading-xl">{{civicsTest!.title}}</p>
+
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+        <p class="govuk-body-lead">
+          Listed below are the 128 civics questions and answers for the 2025 version of the civics test.
+          These questions cover important topics about American government and history. The civics
+          test is an oral test and the USCIS officer will ask you to answer up to 20 out of the 128 civics test
+          questions. You must answer at least 12 questions correctly to pass the 2025 version
+          of the civics test.<br/><br/>
+
+          On the civics test, some answers may change because of elections or appointments. Visit
+          uscis.gov/citizenship/testupdates to find any answers that may have changed on the civics
+          test. You must answer the question with the name of the official serving at the time of your
+          naturalization interview.<br/><br/>
+
+          Although USCIS is aware that there may be additional correct answers to the civics questions,
+          applicants are encouraged to respond to the questions using the answers provided below.<br/><br/>
+
+          <b>65/20 Special Consideration</b><br/>
+          If you are 65 years old or older and have been living in the United States as a lawful permanent
+          resident of the United States for 20 or more years, you may study just the 20 questions that
+          have been marked with an asterisk (*) found at the end of each question. You may also take
+          the civics test in the language of your choice. The USCIS officer will ask you to answer 10 out of
+          the 20 civics test questions with an asterisk. You must answer at least 6 out of 10 questions (or
+          60%) correctly to pass the 2025 version of the civics test.
+        </p>
+
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h3 class="govuk-heading-m">
+              Are you 65 years old or older and have you been living in the United States as a lawful permanent resident of the United States for 20 or more years?
+            </h3>
+          </legend>
+          <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="false" name="is65or20" type="radio" [value]="false" [formControl]="is65or20FormControl">
+              <label class="govuk-label govuk-radios__label" for="false">
+                No
+              </label>
+            </div>
+            <div class="govuk-radios__item">
+              <input class="govuk-radios__input" id="true" name="is65or20" type="radio" [value]="true" [formControl]="is65or20FormControl">
+              <label class="govuk-label govuk-radios__label" for="true">
+                Yes
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-row">
+        <app-questionnaire [questionnaire]="questionnaire"></app-questionnaire>
+
+      </div>
+    } @else {
+      ...loading
+    }
+
+
+  </div>
+</div>

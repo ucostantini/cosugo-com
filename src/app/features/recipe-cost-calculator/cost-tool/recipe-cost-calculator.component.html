@@ -13,19 +13,18 @@
       <div class="govuk-grid-column-two-thirds">
 
 
-        <div class="govuk-accordion" data-module="govuk-accordion">
-
+        <div class="govuk-accordion" data-module="govuk-accordion" id="categorie" appGovukAccordion>
           @for (recipe of recipes; track $index) {
 
             <div class="govuk-accordion__section">
               <div class="govuk-accordion__section-header">
                 <h2 class="govuk-accordion__section-heading">
-                  <button class="govuk-accordion__section-button" id="heading-{{$index}}">
-                    {{ recipe.name }}
+                  <button class="govuk-accordion__section-button" id="categoria-heading-{{$index}}">
+                    {{recipe.name}}
                   </button>
                 </h2>
               </div>
-              <div id="content-{{$index}}" class="govuk-accordion__section-content">
+              <div id="categoria-content-{{$index}}" class="govuk-accordion__section-content">
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
@@ -52,6 +51,7 @@
                     </dd>
                   </div>
                 </dl>
+
                 <table class="govuk-table">
                   <caption class="govuk-table__caption govuk-table__caption">Ingredients</caption>
                   <thead class="govuk-table__head">

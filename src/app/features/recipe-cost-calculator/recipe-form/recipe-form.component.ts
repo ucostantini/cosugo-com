@@ -41,6 +41,11 @@ export class RecipeFormComponent {
   }
 
   addIngredient() {
-    (this.form.get('ingredients') as FormArray).push(this.fb.group(this.ingredientForm));
+    (this.form.get('ingredients') as FormArray).push(this.fb.group({
+      name: this.fb.control(null),
+      price: this.fb.control(null, {nonNullable: true}),
+      quantity: this.fb.control(null, {nonNullable: true}),
+      quantityUsed: this.fb.control(null, {nonNullable: true})
+    }));
   }
 }

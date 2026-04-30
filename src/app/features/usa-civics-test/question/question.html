@@ -1,0 +1,79 @@
+<div class="govuk-grid-row">
+@if (question && result) {
+    <div class="govuk-form-group">
+      <h1 class="govuk-label-wrapper">
+        <label class="govuk-label govuk-label--sm" for="answer">
+          {{result.noQuestion}}. {{question}} @if(result.is65or20) { <b>*</b> } (Question {{result.id}} of 128)
+        </label>
+      </h1>
+      @if (!details!.isVariableAnswer) {
+        <input [formControl]="answer" class="govuk-input" id="answer" name="answer" type="text" />
+      } @else {
+        <div class="govuk-inset-text">
+          {{details!.answers[0]}}
+        </div>
+      }
+    </div>
+
+  <div class="govuk-grid-column-one-half">
+    @if (!details!.isVariableAnswer) {
+      <button class="govuk-button" data-module="govuk-button" (click)="onSubmit()">
+        Check answers
+      </button>
+    }
+  </div>
+  <div class="govuk-grid-column-one-half">
+    @if (acceptableAnswers) {
+      @if (answerResult?.status === 'ISSUED') {
+        <strong class="govuk-tag govuk-tag--green">
+          Correct
+        </strong>
+      } @else {
+        <strong class="govuk-tag govuk-tag--red">
+          Wrong
+        </strong>
+      }
+    } @else {
+      <strong class="govuk-tag govuk-tag--grey">
+        Not answered yet
+      </strong>
+    }
+  </div>
+}
+
+@if (acceptableAnswers) {
+  <div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">
+        Accepted answers
+      </h2>
+    </div>
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        @for (answer of acceptableAnswers; track answer.candidateIndex) {
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              {{answer.candidateText}}
+            </dt>
+            <dd class="govuk-summary-list__value">
+              @if (answer.score < this.answerMatcher.getLowThreshold()) {
+                <strong class="govuk-tag govuk-tag--red">
+                  Unmatch
+                </strong>
+              } @else if (answer.score < this.answerMatcher.getHighThreshold()) {
+                <strong class="govuk-tag govuk-tag--yellow">
+                  Possible match
+                </strong>
+            } @else {
+                <strong class="govuk-tag govuk-tag--green">
+                  Match
+                </strong>
+              }
+            </dd>
+          </div>
+        }
+      </dl>
+    </div>
+  </div>
+}
+</div>
