@@ -6,6 +6,8 @@ import {
 import { Home } from './common/components/home/home';
 import { NotFound } from './common/components/not-found/not-found';
 import { License } from './common/components/license/license';
+import { RecipeCostCalculator } from './features/recipe-cost-calculator/cost-tool/recipe-cost-calculator.component';
+import { TestComponent } from "./features/usa-civics-test/test.component/test.component";
 
 export const routes: Routes = [
   {
@@ -23,6 +25,14 @@ export const routes: Routes = [
   {
     path: 'nutrition',
     component: ComparisonTool
+  },
+  {
+    path: 'recipe-cost',
+    component: RecipeCostCalculator
+  },
+  {
+    path: 'usa-civics-test',
+    component: TestComponent
   },
   {
     path: '**',

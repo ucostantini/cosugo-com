@@ -1,0 +1,91 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Recipe cost calculator tool</h1>
+
+    <p class="govuk-body-lead">Calculate the cost of your recipe</p>
+
+    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <app-recipe-form (submitEvent)="onRecipeAdd($event)"></app-recipe-form>
+      </div>
+      <div class="govuk-grid-column-two-thirds">
+
+
+        <div class="govuk-accordion" data-module="govuk-accordion" id="categorie" appGovukAccordion>
+          @for (recipe of recipes; track $index) {
+
+            <div class="govuk-accordion__section">
+              <div class="govuk-accordion__section-header">
+                <h2 class="govuk-accordion__section-heading">
+                  <button class="govuk-accordion__section-button" id="categoria-heading-{{$index}}">
+                    {{recipe.name}}
+                  </button>
+                </h2>
+              </div>
+              <div id="categoria-content-{{$index}}" class="govuk-accordion__section-content">
+                <dl class="govuk-summary-list">
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                      Name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                      {{ recipe.name }}
+                    </dd>
+                  </div>
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                      Total price
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                      {{ getPriceForRecipe($index) }}
+                    </dd>
+                  </div>
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                      Price per serving
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                      {{ getPriceForRecipePerServingSize($index) }}
+                    </dd>
+                  </div>
+                </dl>
+
+                <table class="govuk-table">
+                  <caption class="govuk-table__caption govuk-table__caption">Ingredients</caption>
+                  <thead class="govuk-table__head">
+                  <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <th class="govuk-table__header" scope="col">Price</th>
+                    <th class="govuk-table__header" scope="col">Quantity</th>
+                    <th class="govuk-table__header" scope="col">Quantity used</th>
+                  </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    @for (ingredient of recipe.ingredients; track $index) {
+                      <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                          {{ ingredient.name || 'N/A' }}
+                        </td>
+                        <td class="govuk-table__cell">
+                          {{ ingredient.price }}
+                        </td>
+                        <td class="govuk-table__cell">
+                          {{ ingredient.quantity }}
+                        </td>
+                        <td class="govuk-table__cell">
+                          {{ ingredient.quantityUsed }}
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

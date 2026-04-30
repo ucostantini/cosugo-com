@@ -1,0 +1,75 @@
+@if(questionnaire) {
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-column-one-half">
+
+      @for (thematic of questionnaire.entries(); track thematic[0]) {
+        <h1 class="govuk-heading-l">{{thematic[0]}}</h1>
+        <div class="govuk-accordion" data-module="govuk-accordion" id="categorie" appGovukAccordion>
+        @for (subThematic of thematic[1].entries(); track subThematic[0]) {
+
+          <div class="govuk-accordion__section">
+            <div class="govuk-accordion__section-header">
+              <h2 class="govuk-accordion__section-heading">
+                <button class="govuk-accordion__section-button" id="categoria-heading-{{subThematic[0]}}">
+                  {{subThematic[0]}}
+                </button>
+              </h2>
+            </div>
+            <div id="categoria-content-{{subThematic[0]}}" class="govuk-accordion__section-content">
+              @for (question of subThematic[1].entries(); track question[0]) {
+                <app-question [question]="question[0]" [details]="question[1]" [result]="getQuestionResultById(question[1].id)" (answerResultEmitter)="onAnswerMatch($event)"></app-question>
+              }
+            </div>
+          </div>
+        }
+        </div>
+      }
+    </div>
+
+    @if(questionnaireResult) {
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-summary-card">
+          <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">
+              {{getNoAnsweredQuestions()}} completed answers / {{questionnaireResult.noQuestions}} questions
+            </h2>
+            <h2 class="govuk-summary-card__title">
+              {{getNoCorrectAnswers()}} correct answers / 12 required
+            </h2>
+          </div>
+          <div class="govuk-summary-card__content">
+            <dl class="govuk-summary-list">
+              @for (answer of questionnaireResult.answers; track answer) {
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    {{answer.noQuestion}}# {{answer.question}}
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    @if (answer.status === 'REFUSED') {
+                      <strong class="govuk-tag govuk-tag--red">
+                        Unmatch
+                      </strong>
+                    } @else if (answer.status === 'READY') {
+                      <strong class="govuk-tag govuk-tag--grey">
+                        Not answered yet
+                      </strong>
+                    } @else if (answer.status === 'ISSUED') {
+                      <strong class="govuk-tag govuk-tag--green">
+                        Match
+                      </strong>
+                    }
+                  </dd>
+                  <dd class="govuk-summary-list__value">
+                    @if(answer.is65or20) { <b>*</b> }
+                  </dd>
+                </div>
+              }
+            </dl>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
