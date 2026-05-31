@@ -1,7 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { PageTextResult } from "pdf-parse";
-import { TextResult } from "pdf-parse";
-import { PDFParse } from 'pdf-parse';
 import { CivicsTest, QuestionDetails, Questions, SubThematics, Thematics } from "./data";
 import { first, firstValueFrom, map, Observable, range } from "rxjs";
 import { HttpClient } from "@angular/common/http";
@@ -10,8 +7,6 @@ import { HttpClient } from "@angular/common/http";
   providedIn: 'root'
 })
 export class UscisPdfParser {
-  private static PDF_PARSER_WORKER_URL = 'https://cdn.jsdelivr.net/npm/pdf-parse@latest/dist/pdf-parse/web/pdf.worker.min.mjs';
-  private static USCIS_CIVICS_TEST_PDF_URL = 'assets/2025-Civics-Test-128-Questions-and-Answers.pdf';
   private readonly http: HttpClient = inject(HttpClient);
 
   getPdf(): Observable<CivicsTest> {
@@ -61,8 +56,8 @@ export class UscisPdfParser {
         currentSubThematic = line;
         thematics.get(currentThematic)!.set(currentSubThematic, new Map<string, QuestionDetails>());
       } else if (!!line.match('^\\d+.')) {
-        const is65or20 = !!line.match('\\*');
-        if (is65or20) {
+        const is65and20 = !!line.match('\\*');
+        if (is65and20) {
           line = line.replace(' *', '');
         }
         let isVariableAnswer = false;
@@ -78,7 +73,7 @@ export class UscisPdfParser {
         }
         const splitResult = line.split(/^(\d+)\.\s*(.*)$/);
         currentQuestion = splitResult[2];
-        thematics.get(currentThematic)!.get(currentSubThematic)!.set(currentQuestion, {id: Number(splitResult[1]), is65or20: is65or20, isVariableAnswer: isVariableAnswer, noAnswers: noAnswers, answers: []});
+        thematics.get(currentThematic)!.get(currentSubThematic)!.set(currentQuestion, {id: Number(splitResult[1]), is65and20: is65and20, isVariableAnswer: isVariableAnswer, noAnswers: noAnswers, answers: []});
       } else if (!!line.match('^• ')) {
         line = line.replace('• ', '');
         thematics.get(currentThematic)!.get(currentSubThematic)!.get(currentQuestion)!.answers.push(line);

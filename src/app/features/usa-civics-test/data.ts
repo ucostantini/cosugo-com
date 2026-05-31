@@ -4,7 +4,7 @@ export type Answer = string;
 
 export type QuestionDetails = {
   id: number;
-  is65or20: boolean;
+  is65and20: boolean;
   isVariableAnswer: boolean;
   noAnswers: number;
   answers: Answer[];
@@ -29,7 +29,7 @@ export type QuestionResult = {
   id: number;
   noQuestion: number;
   question: string;
-  is65or20: boolean;
+  is65and20: boolean;
   noAnswers: number;
   status: STATUS;
 };

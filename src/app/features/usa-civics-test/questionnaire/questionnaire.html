@@ -1,75 +1,57 @@
 @if(questionnaire) {
-  <div class="govuk-grid-row">
-
-    <div class="govuk-grid-column-one-half">
-
+    <div class="grid-col-6">
       @for (thematic of questionnaire.entries(); track thematic[0]) {
-        <h1 class="govuk-heading-l">{{thematic[0]}}</h1>
-        <div class="govuk-accordion" data-module="govuk-accordion" id="categorie" appGovukAccordion>
-        @for (subThematic of thematic[1].entries(); track subThematic[0]) {
-
-          <div class="govuk-accordion__section">
-            <div class="govuk-accordion__section-header">
-              <h2 class="govuk-accordion__section-heading">
-                <button class="govuk-accordion__section-button" id="categoria-heading-{{subThematic[0]}}">
-                  {{subThematic[0]}}
-                </button>
-              </h2>
-            </div>
-            <div id="categoria-content-{{subThematic[0]}}" class="govuk-accordion__section-content">
+        <h2>{{thematic[0]}}</h2>
+        <div class="usa-accordion usa-accordion--bordered">
+          @for (subThematic of thematic[1].entries(); track subThematic[0]) {
+            <h4 class="usa-accordion__heading">
+              <button
+                type="button"
+                class="usa-accordion__button"
+                aria-expanded="false"
+                [attr.aria-controls]="'a-' + subThematic[0]"
+              >
+                {{subThematic[0]}}
+              </button>
+            </h4>
+            <div id="a-{{subThematic[0]}}" class="usa-accordion__content" hidden>
               @for (question of subThematic[1].entries(); track question[0]) {
                 <app-question [question]="question[0]" [details]="question[1]" [result]="getQuestionResultById(question[1].id)" (answerResultEmitter)="onAnswerMatch($event)"></app-question>
               }
             </div>
-          </div>
-        }
+          }
         </div>
       }
     </div>
 
     @if(questionnaireResult) {
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-summary-card">
-          <div class="govuk-summary-card__title-wrapper">
-            <h2 class="govuk-summary-card__title">
-              {{getNoAnsweredQuestions()}} completed answers / {{questionnaireResult.noQuestions}} questions
-            </h2>
-            <h2 class="govuk-summary-card__title">
-              {{getNoCorrectAnswers()}} correct answers / 12 required
-            </h2>
-          </div>
-          <div class="govuk-summary-card__content">
-            <dl class="govuk-summary-list">
-              @for (answer of questionnaireResult.answers; track answer) {
-                <div class="govuk-summary-list__row">
-                  <dt class="govuk-summary-list__key">
-                    {{answer.noQuestion}}# {{answer.question}}
-                  </dt>
-                  <dd class="govuk-summary-list__value">
-                    @if (answer.status === 'REFUSED') {
-                      <strong class="govuk-tag govuk-tag--red">
-                        Unmatch
-                      </strong>
-                    } @else if (answer.status === 'READY') {
-                      <strong class="govuk-tag govuk-tag--grey">
-                        Not answered yet
-                      </strong>
-                    } @else if (answer.status === 'ISSUED') {
-                      <strong class="govuk-tag govuk-tag--green">
-                        Match
-                      </strong>
-                    }
-                  </dd>
-                  <dd class="govuk-summary-list__value">
-                    @if(answer.is65or20) { <b>*</b> }
-                  </dd>
-                </div>
-              }
-            </dl>
-          </div>
-        </div>
+      <div class="grid-col-6">
+        <h4>
+          {{getNoAnsweredQuestions()}} completed answers / {{questionnaireResult.noQuestions}} questions
+        </h4>
+        <h4>
+          {{getNoCorrectAnswers()}} correct answers / {{questionnaireResult.noQuestions * 0.6}} required
+        </h4>
+        <table class="usa-table usa-table--borderless">
+          <tbody>
+            @for (answer of questionnaireResult.answers; track answer) {
+              <tr>
+                <th scope="row">#{{answer.noQuestion}}</th>
+                <td>{{answer.question}}</td>
+                <td>
+                  @if (answer.status === 'REFUSED') {
+                    <span class="usa-tag bg-red">Unmatch</span>
+                  } @else if (answer.status === 'READY') {
+                    <span class="usa-tag" style="white-space: nowrap">Not answered yet</span>
+                  } @else if (answer.status === 'ISSUED') {
+                    <span class="usa-tag bg-green">Match</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     }
-  </div>
 }
 

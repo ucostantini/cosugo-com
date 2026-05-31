@@ -1,79 +1,61 @@
-<div class="govuk-grid-row">
+<div class="grid-row">
 @if (question && result) {
-    <div class="govuk-form-group">
-      <h1 class="govuk-label-wrapper">
-        <label class="govuk-label govuk-label--sm" for="answer">
-          {{result.noQuestion}}. {{question}} @if(result.is65or20) { <b>*</b> } (Question {{result.id}} of 128)
-        </label>
-      </h1>
+      <label class="usa-label" for="answer-{{result.id}}">
+        {{result.noQuestion}}. {{question}} @if(result.is65and20) { <b>*</b> } (Q. {{result.id}} of 128)
+      </label>
       @if (!details!.isVariableAnswer) {
-        <input [formControl]="answer" class="govuk-input" id="answer" name="answer" type="text" />
+        <input [formControl]="answer" class="usa-input" id="answer-{{result.id}}" name="answer-{{result.id}}" type="text" />
       } @else {
-        <div class="govuk-inset-text">
-          {{details!.answers[0]}}
+        <div class="usa-alert usa-alert--info usa-alert--no-icon">
+          <div class="usa-alert__body">
+            <p class="usa-alert__text">
+              {{details!.answers[0]}}
+            </p>
+          </div>
         </div>
       }
-    </div>
 
-  <div class="govuk-grid-column-one-half">
+  <div class="grid-col-6 padding-y-3">
     @if (!details!.isVariableAnswer) {
-      <button class="govuk-button" data-module="govuk-button" (click)="onSubmit()">
+      <button class="usa-button" (click)="onSubmit()">
         Check answers
       </button>
     }
   </div>
-  <div class="govuk-grid-column-one-half">
+  <div class="grid-col-6 padding-y-3">
     @if (acceptableAnswers) {
       @if (answerResult?.status === 'ISSUED') {
-        <strong class="govuk-tag govuk-tag--green">
-          Correct
-        </strong>
+        <span class="usa-tag bg-green">Correct</span>
       } @else {
-        <strong class="govuk-tag govuk-tag--red">
-          Wrong
-        </strong>
+        <span class="usa-tag bg-red">Wrong</span>
       }
     } @else {
-      <strong class="govuk-tag govuk-tag--grey">
-        Not answered yet
-      </strong>
+      <span class="usa-tag">Not answered yet</span>
     }
   </div>
 }
 
 @if (acceptableAnswers) {
-  <div class="govuk-summary-card">
-    <div class="govuk-summary-card__title-wrapper">
-      <h2 class="govuk-summary-card__title">
-        Accepted answers
-      </h2>
-    </div>
-    <div class="govuk-summary-card__content">
-      <dl class="govuk-summary-list">
-        @for (answer of acceptableAnswers; track answer.candidateIndex) {
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              {{answer.candidateText}}
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @if (answer.score < this.answerMatcher.getLowThreshold()) {
-                <strong class="govuk-tag govuk-tag--red">
-                  Unmatch
-                </strong>
-              } @else if (answer.score < this.answerMatcher.getHighThreshold()) {
-                <strong class="govuk-tag govuk-tag--yellow">
-                  Possible match
-                </strong>
+  <table class="usa-table usa-table">
+    <caption>
+      Accepted answers
+    </caption>
+    <tbody>
+      @for (answer of acceptableAnswers; track answer.candidateIndex) {
+        <tr>
+          <th scope="row">{{answer.candidateText}}</th>
+          <td>
+            @if (answer.score < this.answerMatcher.getLowThreshold()) {
+              <span class="usa-tag bg-red">Unmatch</span>
+            } @else if (answer.score < this.answerMatcher.getHighThreshold()) {
+              <span class="usa-tag bg-orange">Possible match</span>
             } @else {
-                <strong class="govuk-tag govuk-tag--green">
-                  Match
-                </strong>
-              }
-            </dd>
-          </div>
-        }
-      </dl>
-    </div>
-  </div>
+              <span class="usa-tag bg-green">Match</span>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 }
 </div>

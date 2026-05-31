@@ -1,92 +1,70 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="this.form">
-  <fieldset class="govuk-fieldset">
-    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-      <h1 class="govuk-fieldset__heading">
-        Ingredients
-      </h1>
+<form class="usa-form" style="max-width: 100%"  (ngSubmit)="onSubmit()" [formGroup]="this.form">
+  <fieldset class="usa-fieldset">
+    <legend class="usa-legend usa-legend--large">
+      Ingredients
     </legend>
+    <p>
+      Required fields are marked with an asterisk (<abbr
+      title="required"
+      class="usa-hint usa-hint--required"
+    >*</abbr
+    >).
+    </p>
 
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="recipeName">
-        Name of the recipe
-      </label>
-      <input autocomplete="recipeName" class="govuk-input govuk-input--width-10 govuk-input--extra-letter-spacing" formControlName="name" id="recipeName"
-             name="recipeName" required spellcheck="false" type="text">
-    </div>
+    <label class="usa-label" for="recipeName">Recipe name <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
+    <input class="usa-input" id="recipeName" name="recipeName" type="text" formControlName="name" required/>
 
     <div formArrayName="ingredients">
     @for (ingredient of ingredients.controls; track $index) {
 
       <div [formGroup]="getIngredientFormGroup($index)">
-        <h2>Ingredient #{{$index}}</h2>
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="name">
-            Name
-          </label>
-          <input autocomplete="name" class="govuk-input govuk-input--width-10 govuk-input--extra-letter-spacing" formControlName="name" id="name"
-                 name="name" required spellcheck="false" type="text">
+        <h3>Ingredient #{{$index}}</h3>
+
+        <label class="usa-label" for="ingredientName-{{$index}}">Name <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
+        <input class="usa-input" id="ingredientName-{{$index}}" name="ingredientName-{{$index}}" type="text" formControlName="name" required/>
+
+        <label class="usa-label" for="price-{{$index}}">Price <abbr title="required"
+                                                         class="usa-hint usa-hint--required">*</abbr></label>
+        <div class="usa-input-group">
+          <div class="usa-input-prefix" aria-hidden="true">
+            $
+          </div>
+          <input
+            id="price-{{$index}}"
+            class="usa-input"
+
+            inputmode="numeric"
+            type="number"
+            step="any"
+            formControlName="price"
+            required
+          />
         </div>
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="price">
-            Price
-          </label>
-          <div class="govuk-input__wrapper">
-            <div aria-hidden="true" class="govuk-input__prefix">£</div>
-            <input aria-describedby="price-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="price" id="price"
-                   inputmode="numeric" name="price" spellcheck="false"
-                   type="number">
-          </div>
-        </div>
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="quantity">
-            Quantity
-          </label>
-          <div id="quantity-hint" class="govuk-hint">
-            The unit does not matter. You can input the number of items (e.g. 1 can of diced tomatoes)
-          </div>
-          <input aria-describedby="quantity-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="quantity" id="quantity"
-                 inputmode="numeric" name="quantity" required spellcheck="false"
-                 type="number">
-        </div>
+        <label class="usa-label" for="quantity-{{$index}}">Quantity <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
+        <div class="usa-hint" id="quantityHint-{{$index}}">Unit agnostic. The number can be an amount in grams for example, or the number of items, etc.</div>
+        <input class="usa-input" id="quantity-{{$index}}" name="quantity-{{$index}}" inputmode="numeric" type="number" formControlName="quantity" required/>
 
-        <div class="govuk-form-group">
-          <label class="govuk-label" for="quantity-used">
-            Quantity used
-          </label>
-          <div id="quantity-used-hint" class="govuk-hint">
-            Use the same unit you used before.
-          </div>
-          <input aria-describedby="quantity-used-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="quantityUsed" id="quantity-used"
-                 inputmode="numeric" name="quantity-used" required spellcheck="false"
-                 type="number">
-        </div>
+        <label class="usa-label" for="quantityUsed-{{$index}}">Quantity used <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
+        <div class="usa-hint" id="quantityUsedHint-{{$index}}">Use the same unit you used above.</div>
+        <input class="usa-input" id="quantityUsed-{{$index}}" name="quantityUsed-{{$index}}" inputmode="numeric" type="number" formControlName="quantityUsed" required/>
       </div>
     }
 
     </div>
 
-    <button class="govuk-button" data-module="govuk-button" type="button" (click)="addIngredient()">
+    <button class="usa-button" type="button" (click)="addIngredient()">
       Add ingredient
     </button>
 
 
-
-    <div class="govuk-form-group">
-      <label class="govuk-label" for="serving-size">
-        Serving size
-      </label>
-      <div id="serving-size-hint" class="govuk-hint">
-        Optional. Must be a fraction of the recipe, i.e. < 1 (e.g. 0.2)
-      </div>
-      <input aria-describedby="quantity-used-hint" class="govuk-input govuk-input--width-3 govuk-input--extra-letter-spacing" formControlName="servingSize" id="serving-size"
-             inputmode="numeric" name="serving-size" spellcheck="false"
-             type="number">
-    </div>
+    <label class="usa-label" for="servingSize">Serving size</label>
+    <div class="usa-hint" id="servingSizeHint">Optional. Must be a fraction of the recipe, (<= 1.00)</div>
+    <input class="usa-input" id="servingSize" name="servingSize" inputmode="numeric" type="number" formControlName="servingSize"/>
 
   </fieldset>
-  <button [disabled]="!form.valid" class="govuk-button" data-module="govuk-button" type="submit">
+  <button [disabled]="!form.valid" class="usa-button" type="submit">
     Calculate the cost
   </button>
 </form>

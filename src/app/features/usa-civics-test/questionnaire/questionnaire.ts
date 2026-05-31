@@ -1,11 +1,10 @@
 import { Component, Input, input, OnChanges, OnInit } from '@angular/core';
 import { QuestionDetails, QuestionnaireResult, QuestionResult, Questions, SubThematics, Thematics } from "../data";
 import { Question } from "../question/question";
-import { GovukAccordionDirective } from "../../../common/directives/govuk-accordion-directive";
 
 @Component({
   selector: 'app-questionnaire',
-  imports: [Question, GovukAccordionDirective],
+  imports: [Question],
   templateUrl: './questionnaire.html',
   styleUrl: './questionnaire.scss'
 })
@@ -30,7 +29,7 @@ export class Questionnaire implements OnInit, OnChanges {
 
           questions.forEach((details: QuestionDetails, key: string)=> {
             i++;
-            questionResults.push({id: details.id, noQuestion: i, question: key, status: 'READY', is65or20: details.is65or20, noAnswers: details.noAnswers});
+            questionResults.push({id: details.id, noQuestion: i, question: key, status: 'READY', is65and20: details.is65and20, noAnswers: details.noAnswers});
           })));
       this.questionnaireResult = {noQuestions: i, answers: questionResults};
     }
