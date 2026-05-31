@@ -1,60 +1,74 @@
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Product nutrition facts comparison tool</h1>
+<div class="bg-base-lightest">
+  <section class="grid-container-widescreen usa-section">
 
-    <p class="govuk-body-lead">Compare the calories and proteins of your products by normalising their unit of measure and
+    <h2 class="font-heading-xl margin-y-0">Product nutrition facts comparison tool</h2>
+
+    <p class="usa-intro">Compare the calories and proteins of your products by normalising their unit of measure and
       price</p>
 
-    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+    <div class="usa-alert usa-alert--info usa-alert--no-icon">
+      <div class="usa-alert__body">
+        <p class="usa-alert__text">
+          Units of measurement do not matter for calculation. $ and grams are only used as a reference.
+        </p>
+      </div>
+    </div>
+    <div class="grid-row padding-y-3">
+      <div class="grid-col-4 bg-white padding-y-3 padding-x-5 border border-base-lighter">
+        <app-product-form (submitEvent)="onProductAdd($event)"></app-product-form>
+      </div>
+      <div class="grid-col-8 padding-x-5 ">
+        <div class="usa-table-container--scrollable" tabindex="0">
+          <table class="usa-table usa-table--borderless">
+            <caption>
+              Products comparison
+            </caption>
+            <thead>
+            <tr>
+              <th data-sortable scope="col" role="columnheader">Name</th>
+              <th data-sortable scope="col" role="columnheader">Calories per 100g</th>
+              <th data-sortable scope="col" role="columnheader">Protein (g) per 100g</th>
+              <th data-sortable scope="col" role="columnheader">Calories per $</th>
+              <th data-sortable scope="col" role="columnheader">Protein (g) per $</th>
+              <th class="text-center" scope="col" role="columnheader"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                <use href="/assets/uswds/img/sprite.svg#delete"></use>
+              </svg></th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (product of products; track $index) {
+                <tr>
+                  <th scope="row">
+                    {{ product.name }}
+                  </th>
+                  <td class="font-mono-sm text-tabular">
+                    {{ product.caloriesPer100g }}
+                  </td>
+                  <td class="font-mono-sm text-tabular">
+                    {{ product.proteinsPer100g }}
+                  </td>
+                  <td class="font-mono-sm text-tabular">
+                    {{ product.caloriesPerCurrency }}
+                  </td>
+                  <td class="font-mono-sm text-tabular">
+                    {{ product.proteinsPerCurrency }}
+                  </td>
+                  <td class="govuk-table__cell">
+                    <button class="usa-button usa-button--secondary" (click)="onDeleteProduct($index)" type="button" style="margin-bottom: 0;">Delete</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <div
+            class="usa-sr-only usa-table__announcement-region"
+            aria-live="polite"
+          ></div>
+        </div>
+      </div>
+    </div>
 
-    <div class="govuk-inset-text">
-      Units of measurement do not matter for calculation. £ and grams are only used for display purposes.
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
-      <app-product-form (submitEvent)="onProductAdd($event)"></app-product-form>
-      </div>
-      <div class="govuk-grid-column-two-thirds">
-        <table class="govuk-table">
-          <caption class="govuk-table__caption govuk-table__caption--m">Products comparison</caption>
-          <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th class="govuk-table__header" scope="col">Name</th>
-            <th class="govuk-table__header" scope="col">Calories per 100g</th>
-            <th class="govuk-table__header" scope="col">Proteins (g) per 100g</th>
-            <th class="govuk-table__header" scope="col">Calories per £</th>
-            <th class="govuk-table__header" scope="col">Proteins (g) per £</th>
-            <th class="govuk-table__header" scope="col"></th>
-          </tr>
-          </thead>
-          <tbody class="govuk-table__body">
-            @for (product of products; track $index) {
-              <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                  {{ product.name }}
-                </td>
-                <td class="govuk-table__cell">
-                  {{ product.caloriesPer100g }}
-                </td>
-                <td class="govuk-table__cell">
-                  {{ product.proteinsPer100g }}
-                </td>
-                <td class="govuk-table__cell">
-                  {{ product.caloriesPerCurrency }}
-                </td>
-                <td class="govuk-table__cell">
-                  {{ product.proteinsPerCurrency }}
-                </td>
-                <td class="govuk-table__cell">
-                  <button (click)="onDeleteProduct($index)" class="govuk-button govuk-button--warning" style="margin-bottom: 0;" data-module="govuk-button">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+
+
+  </section>
 </div>

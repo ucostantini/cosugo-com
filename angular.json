@@ -21,7 +21,7 @@
             "outputPath": "dist/cosugo-com",
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/govuk-frontend/dist/govuk"
+                "node_modules/@uswds/uswds/packages"
               ]
             },
 						"browser": "src/main.ts",
@@ -34,19 +34,34 @@
 								"glob": "**/*",
                 "input": "assets",
                 "output": "assets"
-							}
+							},
+              {
+                "glob": "**/*",
+                "input": "node_modules/@uswds/uswds/dist/img",
+                "output": "/assets/uswds/img"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@uswds/uswds/dist/fonts",
+                "output": "/assets/uswds/fonts"
+              }
 						],
 						"styles": [
-							"src/styles.scss"
-						]
+							"src/styles.scss",
+              "node_modules/@uswds/uswds/dist/css/uswds.min.css"
+						],
+            "scripts": [
+              "node_modules/@uswds/uswds/dist/js/uswds-init.min.js",
+              "node_modules/@uswds/uswds/dist/js/uswds.min.js"
+            ]
 					},
 					"configurations": {
 						"production": {
 							"budgets": [
 								{
 									"type": "initial",
-									"maximumWarning": "500kB",
-									"maximumError": "1MB"
+									"maximumWarning": "2MB",
+									"maximumError": "3MB"
 								},
 								{
 									"type": "anyComponentStyle",

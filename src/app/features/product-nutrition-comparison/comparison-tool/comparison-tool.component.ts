@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { Product, NormalizedProduct } from '../data';
 import { ProductForm } from '../product-form/product-form.component';
 import { LocalStorageService } from '../../../common/services/local-storage-service';
+
 
 @Component({
   selector: 'app-comparison-tool',

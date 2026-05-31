@@ -24,7 +24,7 @@ export class Question {
 
   onSubmit(): void {
     this.acceptableAnswers = this.answerMatcher.matchAnswer(this.answer.value, this.details!.answers, this.details!.noAnswers);
-    this.answerResult = {id: this.result!.id, noQuestion: this.result!.noQuestion, question: this.result!.question, status: this.determineQuestionResultStatus(this.acceptableAnswers), is65or20: this.result!.is65or20, noAnswers: this.result!.noAnswers};
+    this.answerResult = {id: this.result!.id, noQuestion: this.result!.noQuestion, question: this.result!.question, status: this.determineQuestionResultStatus(this.acceptableAnswers), is65and20: this.result!.is65and20, noAnswers: this.result!.noAnswers};
     this.answerResultEmitter.emit(this.answerResult);
   }
 
