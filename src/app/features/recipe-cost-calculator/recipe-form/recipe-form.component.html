@@ -18,7 +18,7 @@
     @for (ingredient of ingredients.controls; track $index) {
 
       <div [formGroup]="getIngredientFormGroup($index)">
-        <h3>Ingredient #{{$index}}</h3>
+        <h3>Ingredient #{{$index + 1}}</h3>
 
         <label class="usa-label" for="ingredientName-{{$index}}">Name <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
         <input class="usa-input" id="ingredientName-{{$index}}" name="ingredientName-{{$index}}" type="text" formControlName="name" required/>
@@ -42,7 +42,7 @@
         </div>
 
 
-        <label class="usa-label" for="quantity-{{$index}}">Quantity <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
+        <label class="usa-label" for="quantity-{{$index}}">Total Quantity <abbr title="required" class="usa-hint usa-hint--required">*</abbr></label>
         <div class="usa-hint" id="quantityHint-{{$index}}">Unit agnostic. The number can be an amount in grams for example, or the number of items, etc.</div>
         <input class="usa-input" id="quantity-{{$index}}" name="quantity-{{$index}}" inputmode="numeric" type="number" formControlName="quantity" required/>
 

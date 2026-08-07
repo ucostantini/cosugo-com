@@ -3,10 +3,11 @@ import { UscisPdfParser } from '../uscis-pdf-parser';
 import { CivicsTest, QuestionDetails, Questions, SubThematics, Thematics } from "../data";
 import { Questionnaire } from "../questionnaire/questionnaire";
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-test.component',
-  imports: [Questionnaire, ReactiveFormsModule],
+  imports: [Questionnaire, ReactiveFormsModule, RouterLink],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })

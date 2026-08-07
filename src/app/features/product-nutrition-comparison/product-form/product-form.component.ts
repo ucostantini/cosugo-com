@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject, output, input, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Product } from '../data';
 import { NgClass } from '@angular/common';
@@ -11,6 +11,7 @@ import { NgClass } from '@angular/common';
 })
 export class ProductForm {
   submitEvent = output<Product>();
+  product = input<Product | null>(null);
 
   private readonly fb: FormBuilder = inject(FormBuilder);
 
@@ -22,6 +23,17 @@ export class ProductForm {
     calories: this.fb.control(null, {nonNullable: true}),
     proteins: this.fb.control(null, {nonNullable: true}),
   });
+
+  constructor() {
+    effect(() => {
+      const currentProduct = this.product();
+      if (currentProduct) {
+        this.form.patchValue(currentProduct);
+      } else {
+        this.form.reset();
+      }
+    });
+  }
 
   onSubmit(): void {
     this.submitEvent.emit(this.form.value as Product);

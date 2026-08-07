@@ -30,7 +30,11 @@ const DEFAULT_STOPWORDS = new Set([
   'the', 'a', 'an', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 'in', 'on', 'at', 'of', 'for', 'to', 'by', 'with',
   'that', 'this', 'these', 'those', 'as', 'be', 'been', 'from', 'which', 'it', 'its', 'their', 'they', 'he', 'she', 'we', 'you', 'i', ',', '.'
 ]);
+// TODO: have acomprehensive synonym system in place, as well as a system to ignore a verb tense, and plural forms
+// example: "issue driving licenses" did NOT match "give a driver's license"
+// issur = give, driving = driver = driver's = drivers, license = licenses
 
+// TODO 15th matched 14th even though it's not the same number !!
 const DEFAULT_SYNONYMS: Record<string, string[]> = {
   // People / Titles
   'president': ['president', 'prez', 'potus'],
@@ -40,7 +44,7 @@ const DEFAULT_SYNONYMS: Record<string, string[]> = {
   'federalist': ['federalist', 'federalists'],
   'papers': ['paper', 'papers', 'essay', 'essays'],
   'world trade center': ['world trade center', 'wtc'],
-  'new york city': ['new york city', 'nyc'],
+  'new york city': ['new york city', 'nyc', 'new york'],
   'plane': ['plane', 'planes', 'airplane', 'airplanes', 'plane(s)'],
   'state': ['state', 'states'],
   'star': ['star', 'stars'],

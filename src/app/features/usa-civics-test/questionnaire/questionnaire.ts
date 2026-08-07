@@ -29,7 +29,7 @@ export class Questionnaire implements OnInit, OnChanges {
 
           questions.forEach((details: QuestionDetails, key: string)=> {
             i++;
-            questionResults.push({id: details.id, noQuestion: i, question: key, status: 'READY', is65and20: details.is65and20, noAnswers: details.noAnswers});
+            questionResults.push({id: details.id, noQuestion: i, question: key, status: details.isVariableAnswer ? 'IGNORED' : 'READY', is65and20: details.is65and20, noAnswers: details.noAnswers});
           })));
       this.questionnaireResult = {noQuestions: i, answers: questionResults};
     }
@@ -37,6 +37,10 @@ export class Questionnaire implements OnInit, OnChanges {
 
   onAnswerMatch($event: QuestionResult) {
     this.questionnaireResult!.answers[$event.noQuestion - 1] = $event;
+  }
+
+  getNoQuestions() {
+    return this.questionnaireResult!.answers.filter(question => question.status !== 'IGNORED').length;
   }
 
   getNoAnsweredQuestions() {
@@ -47,8 +51,13 @@ export class Questionnaire implements OnInit, OnChanges {
     return this.questionnaireResult!.answers.filter(question => question.status === 'ISSUED').length;
   }
 
+  getNoWrongAnswers() {
+    return this.questionnaireResult!.answers.filter(question => question.status === 'REFUSED').length;
+  }
+
   getQuestionResultById(id: number): QuestionResult {
     return this.questionnaireResult!.answers.filter(questionResult => questionResult.id === id)[0];
   }
 
+  protected readonly Math = Math;
 }

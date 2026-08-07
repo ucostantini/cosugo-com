@@ -27,10 +27,13 @@
     @if(questionnaireResult) {
       <div class="grid-col-6">
         <h4>
-          {{getNoAnsweredQuestions()}} completed answers / {{questionnaireResult.noQuestions}} questions
+          {{getNoAnsweredQuestions()}} completed answers / {{getNoQuestions()}} questions
         </h4>
         <h4>
-          {{getNoCorrectAnswers()}} correct answers / {{questionnaireResult.noQuestions * 0.6}} required
+          {{getNoCorrectAnswers()}} correct answers / {{Math.trunc(getNoQuestions() * 0.6)}} required
+        </h4>
+        <h4>
+          {{getNoWrongAnswers()}} wrong answers / {{Math.trunc(getNoQuestions() * 0.4) + 1}} maximum
         </h4>
         <table class="usa-table usa-table--borderless">
           <tbody>
@@ -40,11 +43,13 @@
                 <td>{{answer.question}}</td>
                 <td>
                   @if (answer.status === 'REFUSED') {
-                    <span class="usa-tag bg-red">Unmatch</span>
+                    <span class="usa-tag bg-red">Wrong</span>
                   } @else if (answer.status === 'READY') {
-                    <span class="usa-tag" style="white-space: nowrap">Not answered yet</span>
+                    <span class="usa-tag" style="white-space: nowrap">Standby</span>
                   } @else if (answer.status === 'ISSUED') {
-                    <span class="usa-tag bg-green">Match</span>
+                    <span class="usa-tag bg-green">Correct</span>
+                  } @else if (answer.status === 'IGNORED') {
+                    <span class="usa-tag bg-blue">N/A</span>
                   }
                 </td>
               </tr>

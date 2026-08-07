@@ -2,39 +2,123 @@
 
   @if (civicsTest) {
     <section class="grid-container usa-prose font-sans-sm">
-      <h1 class="font-heading-xl margin-y-0">USA Civics Test</h1>
-      <div>
-        <h2>{{ civicsTest!.title }}</h2>
+      <h1 class="font-heading-xl margin-y-0">Naturalization USCIS Civics Test</h1>
 
-          <p>
-            Listed below are the 128 civics questions and answers for the 2025 version of the civics test.
-            These questions cover important topics about American government and history. The civics
-            test is an oral test and the USCIS officer will ask you to answer up to 20 out of the 128 civics test
-            questions. You must answer at least 12 questions correctly to pass the 2025 version
-            of the civics test.</p>
-          <p>
-            On the civics test, some answers may change because of elections or appointments. Visit
-            uscis.gov/citizenship/testupdates to find any answers that may have changed on the civics
-            test. You must answer the question with the name of the official serving at the time of your
-            naturalization interview.
+      <section id="test-section-id" class="usa-section">
+        <div class="grid-container">
+          <h2 class="font-heading-xl margin-y-0">What is this tool ? </h2>
+          <p class="usa-intro">
+            This tool is for you to test your knowledge in American civics.
+            More specifically, the questions used here are those immigrants must answer to during their naturalization interview with USCIS.
+            As an immigrant, you can use this tool to study for the civics test and prepare for your interview.
+            As a general public, you can test your knowledge for fun using this tool.
           </p>
 
-          <p>
-            Although USCIS is aware that there may be additional correct answers to the civics questions,
-            applicants are encouraged to respond to the questions using the answers provided below.
+          <h2 class="font-heading-xl margin-y-0">Why this tool ? </h2>
+          <p class="usa-intro">
+            Most websites you will find on the Internet are multiple choice quizzes, which do not reflect the reality.
+            The reality is that the USCIS officer will orally ask you the civics questions, and will not provide you with several options.
+            You will need to state the accurate answer (out of several possible accepted answers).
+
+            This tool tries to reflect this by making you type in you answer and make it match with the official list of accepted answers, for each question.
           </p>
 
-          <h4>65/20 Special Consideration</h4>
-          <p>
-            If you are 65 years old or older and have been living in the United States as a lawful permanent
-            resident of the United States for 20 or more years, you may study just the 20 questions that
-            have been marked with an asterisk (*) found at the end of each question. You may also take
-            the civics test in the language of your choice. The USCIS officer will ask you to answer 10 out of
-            the 20 civics test questions with an asterisk. You must answer at least 6 out of 10 questions (or
-            60%) correctly to pass the 2025 version of the civics test.
-          </p>
+          <div class="usa-alert usa-alert--info">
+            <div class="usa-alert__body">
+              <p class="usa-alert__text">
+                This tool uses the last version (2025) of USCIS questions.
+                On the civics test, some answers may change because of elections or appointments. Visit
+                <a class="usa-link" href="https://uscis.gov/citizenship/testupdates">
+                  uscis.gov/citizenship/testupdates
+                </a>
+                to find any answers that may have changed on the civics
+                test. You must answer the question with the name of the official serving at the time of your
+                naturalization interview.
+              </p>
+            </div>
+          </div>
+
+
+
+
+          <div
+            class="usa-summary-box"
+            role="region"
+            aria-labelledby="summary-box-key-information"
+          >
+            <div class="usa-summary-box__body">
+              <h4 class="usa-summary-box__heading" id="summary-box-key-information">
+                Official resources
+              </h4>
+              <div class="usa-summary-box__text">
+                Since this website is NOT official in ANY way and was created purely for fun, as an immigrant, you are encouraged to consult official sources from USCIS.
+
+                <ul class="usa-list">
+                  <li>
+                    Visit
+                    <a class="usa-link" href="https://www.uscis.gov/citizenship-resource-center/naturalization-test-and-study-resources/2025-civics-test">
+                      uscis.gov/citizenship-resource-center/naturalization-test-and-study-resources/2025-civics-test
+                    </a>
+                    to learn more about the 2025 civics test.
+                  </li>
+                  <li>
+                    Visit
+                    <a class="usa-link" href="https://www.uscis.gov/citizenship/find-study-materials-and-resources/study-for-the-test">
+                      uscis.gov/citizenship/find-study-materials-and-resources/study-for-the-test
+                    </a>
+                    to find materials to study for your test.
+                  </li>
+                  <li>
+                    If you are a nerd like me, you can visit the following link to consult the USCIS Policy Manual chapter related to the civics test.
+                    Visit
+                    <a class="usa-link" href="https://www.uscis.gov/policy-manual/volume-12-part-e-chapter-2">
+                      uscis.gov/policy-manual/volume-12-part-e-chapter-2
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
+        <div class="usa-accordion usa-accordion--bordered">
+            <h4 class="usa-accordion__heading">
+              <button
+                type="button"
+                class="usa-accordion__button"
+                aria-expanded="false"
+                [attr.aria-controls]="'uscis-info'"
+              >
+                More information about the test
+              </button>
+            </h4>
+            <div id="uscis-info" class="usa-accordion__content" hidden>
+              <p>
+                These questions cover important topics about American government and history. The civics
+                test is an oral test and the USCIS officer will ask you to answer up to 20 out of the 128 civics test
+                questions. The 2025 naturalization civics test is an oral test consisting of 20 questions from the list of 128 civics test questions.
+                You must answer 12 questions correctly to pass the 2025 test. You will fail the test if you answer 9 of the 20 questions incorrectly.
+                Officers will stop asking questions when an alien answers 12 questions correctly, or 9 questions incorrectly.
+              </p>
+
+              <p>
+                <strong>Although USCIS is aware that there may be additional correct answers to the civics questions,
+                  applicants are encouraged to respond to the questions using the answers provided below.</strong>
+
+              </p>
+              <br>
+              <h3>65/20 Special Consideration</h3>
+              <p>
+                If you are 65 years old or older and have been living in the United States as a lawful permanent
+                resident of the United States for 20 or more years, you may study just the 20 questions that
+                have been marked with an asterisk (*) found at the end of each question. You may also take
+                the civics test in the language of your choice. The USCIS officer will ask you to answer 10 out of
+                the 20 civics test questions with an asterisk. You must answer at least 6 out of 10 questions (or
+                60%) correctly to pass the 2025 version of the civics test.
+              </p>
+            </div>
+        </div>
 
       </section>
       <section class="grid-container usa-section grid-row">

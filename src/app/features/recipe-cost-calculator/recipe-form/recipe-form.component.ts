@@ -38,6 +38,8 @@ export class RecipeFormComponent {
   onSubmit(): void {
     this.submitEvent.emit(this.form.value as Recipe);
     this.form.reset();
+    (this.form.get('ingredients') as FormArray).clear();
+    this.addIngredient();
   }
 
   addIngredient() {
