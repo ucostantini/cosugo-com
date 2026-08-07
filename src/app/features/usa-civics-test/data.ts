@@ -23,7 +23,7 @@ export type CivicsTest = {
   thematics: Thematics;
 };
 
-export type STATUS = 'READY' | 'ISSUED' | 'REFUSED';
+export type STATUS = 'READY' | 'ISSUED' | 'REFUSED' | 'IGNORED';
 
 export type QuestionResult = {
   id: number;

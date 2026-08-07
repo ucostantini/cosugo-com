@@ -29,8 +29,10 @@
       } @else {
         <span class="usa-tag bg-red">Wrong</span>
       }
+    } @else if (!details!.isVariableAnswer) {
+      <span class="usa-tag">Standby</span>
     } @else {
-      <span class="usa-tag">Not answered yet</span>
+      <span class="usa-tag bg-blue">Not Applicable</span>
     }
   </div>
 }

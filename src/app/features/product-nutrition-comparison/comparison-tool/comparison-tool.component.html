@@ -15,7 +15,7 @@
     </div>
     <div class="grid-row padding-y-3">
       <div class="grid-col-4 bg-white padding-y-3 padding-x-5 border border-base-lighter">
-        <app-product-form (submitEvent)="onProductAdd($event)"></app-product-form>
+        <app-product-form [product]="selectedProduct()" (submitEvent)="onProductAdd($event)"></app-product-form>
       </div>
       <div class="grid-col-8 padding-x-5 ">
         <div class="usa-table-container--scrollable" tabindex="0">
@@ -31,30 +31,36 @@
               <th data-sortable scope="col" role="columnheader">Calories per $</th>
               <th data-sortable scope="col" role="columnheader">Protein (g) per $</th>
               <th class="text-center" scope="col" role="columnheader"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
+                <use href="/assets/uswds/img/sprite.svg#edit"></use>
+              </svg></th>
+              <th class="text-center" scope="col" role="columnheader"><svg class="usa-icon" aria-hidden="true" focusable="false" role="img">
                 <use href="/assets/uswds/img/sprite.svg#delete"></use>
               </svg></th>
             </tr>
             </thead>
             <tbody>
-              @for (product of products; track $index) {
+              @for (product of products.entries(); track product[0]) {
                 <tr>
                   <th scope="row">
-                    {{ product.name }}
+                    {{ product[0] }}
                   </th>
                   <td class="font-mono-sm text-tabular">
-                    {{ product.caloriesPer100g }}
+                    {{ (product[1] | normalizeProduct).caloriesPer100g }}
                   </td>
                   <td class="font-mono-sm text-tabular">
-                    {{ product.proteinsPer100g }}
+                    {{ (product[1] | normalizeProduct).proteinsPer100g }}
                   </td>
                   <td class="font-mono-sm text-tabular">
-                    {{ product.caloriesPerCurrency }}
+                    {{ (product[1] | normalizeProduct).caloriesPerCurrency }}
                   </td>
                   <td class="font-mono-sm text-tabular">
-                    {{ product.proteinsPerCurrency }}
+                    {{ (product[1] | normalizeProduct).proteinsPerCurrency }}
                   </td>
-                  <td class="govuk-table__cell">
-                    <button class="usa-button usa-button--secondary" (click)="onDeleteProduct($index)" type="button" style="margin-bottom: 0;">Delete</button>
+                  <td>
+                    <button class="usa-button usa-button--accent-cool" (click)="onEditProduct(product[0])" type="button" style="margin-bottom: 0;">Edit</button>
+                  </td>
+                  <td>
+                  <button class="usa-button usa-button--secondary" (click)="onDeleteProduct(product[0])" type="button" style="margin-bottom: 0;">Delete</button>
                   </td>
                 </tr>
               }
